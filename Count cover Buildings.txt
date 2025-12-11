@@ -1,0 +1,42 @@
+import java.util.*;
+
+class Solution {
+    public int countCoveredBuildings(int n, int[][] buildings) {
+        // If n is large but buildings are sparse, prefer maps.
+        // We'll use arrays sized n+1 because 1 <= x,y <= n and n <= 1e5 (fits memory).
+        final int INF = Integer.MAX_VALUE / 4;
+        int[] minColInRow = new int[n + 1];
+        int[] maxColInRow = new int[n + 1];
+        int[] minRowInCol = new int[n + 1];
+        int[] maxRowInCol = new int[n + 1];
+
+        // initialize
+        Arrays.fill(minColInRow, INF);
+        Arrays.fill(minRowInCol, INF);
+        Arrays.fill(maxColInRow, -INF);
+        Arrays.fill(maxRowInCol, -INF);
+
+        // populate min/max for rows and columns
+        for (int[] b : buildings) {
+            int x = b[0], y = b[1];
+            if (y < minColInRow[x]) minColInRow[x] = y;
+            if (y > maxColInRow[x]) maxColInRow[x] = y;
+            if (x < minRowInCol[y]) minRowInCol[y] = x;
+            if (x > maxRowInCol[y]) maxRowInCol[y] = x;
+        }
+
+        int covered = 0;
+        // check each building using those extremes
+        for (int[] b : buildings) {
+            int x = b[0], y = b[1];
+            boolean hasAbove = minRowInCol[y] < x;
+            boolean hasBelow = maxRowInCol[y] > x;
+            boolean hasLeft  = minColInRow[x] < y;
+            boolean hasRight = maxColInRow[x] > y;
+
+            if (hasAbove && hasBelow && hasLeft && hasRight) covered++;
+        }
+
+        return covered;
+    }
+}
