@@ -1,0 +1,69 @@
+import java.util.*;
+
+class TestClass {
+
+    static int find(int parent[], int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent, parent[x]);
+        return parent[x];
+    }
+
+    static void unionSet(int parent[], int size[], int a, int b) {
+        int pa = find(parent, a);
+        int pb = find(parent, b);
+        if (pa != pb) {
+            if (size[pa] < size[pb]) {
+                parent[pa] = pb;
+                size[pb] += size[pa];
+            } else {
+                parent[pb] = pa;
+                size[pa] += size[pb];
+            }
+        }
+    }
+
+    public static void main(String args[]) throws Exception {
+
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();   // number of computers
+        int m = sc.nextInt();   // number of existing wires
+        int k = sc.nextInt();   // number of new wires allowed
+
+        int parent[] = new int[n + 1];
+        int size[] = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+
+        // Build DSU
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            unionSet(parent, size, u, v);
+        }
+
+        // Collect component sizes
+        ArrayList<Integer> comps = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            if (parent[i] == i) {
+                comps.add(size[i]);
+            }
+        }
+
+        // Sort sizes in descending order
+        Collections.sort(comps, Collections.reverseOrder());
+
+        int componentsToMerge = k + 1;
+        int answer = 0;
+
+        // Sum the sizes of the largest (k+1) components
+        for (int i = 0; i < componentsToMerge && i < comps.size(); i++) {
+            answer += comps.get(i);
+        }
+
+        System.out.println(answer);
+    }
+}
