@@ -1,0 +1,53 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[] ) throws Exception {
+
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt(); // number of cities
+        int m = sc.nextInt(); // number of roads
+        int fuel = sc.nextInt(); // fuel
+        int start = sc.nextInt(); // starting city
+
+        // adjacency list
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+
+        // BFS
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, -1);
+
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start);
+        dist[start] = 0;
+
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+
+            for (int next : graph.get(curr)) {
+                if (dist[next] == -1 && dist[curr] + 1 <= fuel) {
+                    dist[next] = dist[curr] + 1;
+                    q.add(next);
+                }
+            }
+        }
+
+        // Count reachable cities
+        int count = 0;
+        for (int i = 1; i <= n; i++) {
+            if (dist[i] != -1 && dist[i] <= fuel) count++;
+        }
+
+        System.out.println(count);
+    }
+}
