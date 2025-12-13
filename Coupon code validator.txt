@@ -1,0 +1,42 @@
+import java.util.*;
+
+class Solution {
+    public List<String> validateCoupons(String[] code, String[] businessLine, boolean[] isActive) {
+        
+        // Business line order
+        String[] order = {"electronics", "grocery", "pharmacy", "restaurant"};
+        
+        // Map to store valid coupons by business line
+        Map<String, List<String>> map = new HashMap<>();
+        for (String b : order) {
+            map.put(b, new ArrayList<>());
+        }
+        
+        // Regex for valid coupon code
+        String regex = "^[A-Za-z0-9_]+$";
+        
+        for (int i = 0; i < code.length; i++) {
+            if (
+                isActive[i] &&
+                code[i] != null &&
+                !code[i].isEmpty() &&
+                code[i].matches(regex) &&
+                map.containsKey(businessLine[i])
+            ) {
+                map.get(businessLine[i]).add(code[i]);
+            }
+        }
+        
+        // Result list
+        List<String> result = new ArrayList<>();
+        
+        // Sort by business line order, then lexicographically
+        for (String b : order) {
+            List<String> list = map.get(b);
+            Collections.sort(list);
+            result.addAll(list);
+        }
+        
+        return result;
+    }
+}
