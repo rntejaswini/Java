@@ -1,0 +1,75 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    // factorize number and return map of prime -> exponent mod 3
+    static Map<Integer, Integer> factorize(int x) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int p = 2; p * p <= x; p++) {
+            int cnt = 0;
+            while (x % p == 0) {
+                x /= p;
+                cnt++;
+            }
+            cnt %= 3;
+            if (cnt > 0) map.put(p, cnt);
+        }
+        if (x > 1) map.put(x, 1); // remaining prime
+        return map;
+    }
+
+    // combine two factor maps mod 3
+    static Map<Integer, Integer> merge(
+            Map<Integer, Integer> a,
+            Map<Integer, Integer> b) {
+
+        Map<Integer, Integer> res = new HashMap<>(a);
+        for (Map.Entry<Integer, Integer> e : b.entrySet()) {
+            int p = e.getKey();
+            int val = (res.getOrDefault(p, 0) + e.getValue()) % 3;
+            if (val == 0) res.remove(p);
+            else res.put(p, val);
+        }
+        return res;
+    }
+
+    // convert map to string key
+    static String encode(Map<Integer, Integer> map) {
+        if (map.isEmpty()) return "0";
+        List<Integer> keys = new ArrayList<>(map.keySet());
+        Collections.sort(keys);
+        StringBuilder sb = new StringBuilder();
+        for (int k : keys) {
+            sb.append(k).append("^").append(map.get(k)).append("#");
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        Map<String, Long> freq = new HashMap<>();
+        Map<Integer, Integer> curr = new HashMap<>();
+
+        // empty prefix
+        freq.put("0", 1L);
+
+        long ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            int x = Integer.parseInt(st.nextToken());
+            Map<Integer, Integer> f = factorize(x);
+            curr = merge(curr, f);
+            String key = encode(curr);
+
+            long count = freq.getOrDefault(key, 0L);
+            ans += count;
+            freq.put(key, count + 1);
+        }
+
+        System.out.println(ans);
+    }
+}
