@@ -1,0 +1,80 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    static List<Integer>[] tree;
+    static int[][] dp;
+    static boolean[] visited;
+
+    static void dfs(int u) {
+        visited[u] = true;
+        dp[u][0] = 0;   // no camera at u
+        dp[u][1] = 1;   // camera at u
+
+        for (int v : tree[u]) {
+            if (!visited[v]) {
+                dfs(v);
+                dp[u][0] += dp[v][1];
+                dp[u][1] += Math.min(dp[v][0], dp[v][1]);
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+
+        int n = fs.nextInt();
+        tree = new ArrayList[n + 1];
+        dp = new int[n + 1][2];
+        visited = new boolean[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            tree[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < n - 1; i++) {
+            int u = fs.nextInt();
+            int v = fs.nextInt();
+            tree[u].add(v);
+            tree[v].add(u);
+        }
+
+        // Run DFS from any node (tree is connected)
+        dfs(1);
+
+        int result = Math.min(dp[1][0], dp[1][1]);
+        System.out.println(result);
+    }
+
+    // Fast input (important for HackerEarth)
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+
+        FastScanner(InputStream in) {
+            this.in = in;
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            while ((c = read()) <= ' ') ;
+            int val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val;
+        }
+    }
+}
