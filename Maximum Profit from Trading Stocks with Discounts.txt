@@ -1,0 +1,112 @@
+import java.util.*;
+
+class Solution {
+
+    int budget;
+    int[] present, future;
+    List<Integer>[] tree;
+
+    int[][] memoBuy, memoNoBuy;
+    boolean[] visBuy, visNoBuy;
+
+    public int maxProfit(int n, int[] present, int[] future, int[][] hierarchy, int budget) {
+        this.present = present;
+        this.future = future;
+        this.budget = budget;
+
+        // Build tree + super root
+        tree = new ArrayList[n + 1];
+        for (int i = 0; i <= n; i++) tree[i] = new ArrayList<>();
+
+        boolean[] hasParent = new boolean[n];
+        for (int[] e : hierarchy) {
+            int u = e[0] - 1;
+            int v = e[1] - 1;
+            tree[u].add(v);
+            hasParent[v] = true;
+        }
+
+        // Super root connects all real roots
+        for (int i = 0; i < n; i++) {
+            if (!hasParent[i]) tree[n].add(i);
+        }
+
+        memoBuy = new int[n + 1][budget + 1];
+        memoNoBuy = new int[n + 1][budget + 1];
+        visBuy = new boolean[n + 1];
+        visNoBuy = new boolean[n + 1];
+
+        int[] dp = dfs(n, false);
+
+        int ans = 0;
+        for (int b = 0; b <= budget; b++) {
+            ans = Math.max(ans, dp[b]);
+        }
+        return ans;
+    }
+
+    private int[] dfs(int u, boolean parentBought) {
+
+        if (u != present.length) {
+            if (parentBought && visBuy[u]) return memoBuy[u];
+            if (!parentBought && visNoBuy[u]) return memoNoBuy[u];
+        }
+
+        int[] dp = new int[budget + 1];
+        Arrays.fill(dp, Integer.MIN_VALUE);
+        dp[0] = 0;
+
+        // Case 1: u NOT bought
+        for (int v : tree[u]) {
+            int[] child = dfs(v, false);
+            dp = merge(dp, child);
+        }
+
+        // Case 2: u BOUGHT (skip super root)
+        if (u != present.length) {
+            int cost = parentBought ? present[u] / 2 : present[u];
+            int profit = future[u] - cost;
+
+            if (cost <= budget) {
+                int[] dpBuy = new int[budget + 1];
+                Arrays.fill(dpBuy, Integer.MIN_VALUE);
+                dpBuy[cost] = profit;
+
+                for (int v : tree[u]) {
+                    int[] child = dfs(v, true);
+                    dpBuy = merge(dpBuy, child);
+                }
+
+                for (int b = 0; b <= budget; b++) {
+                    dp[b] = Math.max(dp[b], dpBuy[b]);
+                }
+            }
+        }
+
+        if (u != present.length) {
+            if (parentBought) {
+                visBuy[u] = true;
+                memoBuy[u] = dp;
+            } else {
+                visNoBuy[u] = true;
+                memoNoBuy[u] = dp;
+            }
+        }
+
+        return dp;
+    }
+
+    private int[] merge(int[] a, int[] b) {
+        int[] res = new int[budget + 1];
+        Arrays.fill(res, Integer.MIN_VALUE);
+
+        for (int i = 0; i <= budget; i++) {
+            if (a[i] == Integer.MIN_VALUE) continue;
+            for (int j = 0; i + j <= budget; j++) {
+                if (b[j] == Integer.MIN_VALUE) continue;
+                res[i + j] = Math.max(res[i + j], a[i] + b[j]);
+            }
+        }
+        return res;
+    }
+}
