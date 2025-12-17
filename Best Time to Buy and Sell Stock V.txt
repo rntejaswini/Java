@@ -1,0 +1,45 @@
+class Solution {
+    public long maximumProfit(int[] prices, int k) {
+        int n = prices.length;
+        long NEG = Long.MIN_VALUE / 4;
+
+        long[] free = new long[k + 1];
+        long[] hold = new long[k + 1];   // holding stock (long)
+        long[] shortPos = new long[k + 1]; // holding short position
+
+        // Initialize
+        for (int i = 0; i <= k; i++) {
+            free[i] = 0;
+            hold[i] = NEG;
+            shortPos[i] = NEG;
+        }
+
+        for (int price : prices) {
+            for (int t = k; t >= 0; t--) {
+
+                // Buy (normal)
+                hold[t] = Math.max(hold[t], free[t] - price);
+
+                // Sell short
+                shortPos[t] = Math.max(shortPos[t], free[t] + price);
+
+                // Complete transaction
+                if (t + 1 <= k) {
+                    free[t + 1] = Math.max(
+                        free[t + 1],
+                        Math.max(
+                            hold[t] + price,       // sell
+                            shortPos[t] - price    // buy back
+                        )
+                    );
+                }
+            }
+        }
+
+        long ans = 0;
+        for (int i = 0; i <= k; i++) {
+            ans = Math.max(ans, free[i]);
+        }
+        return ans;
+    }
+}
