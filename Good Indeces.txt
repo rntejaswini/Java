@@ -1,0 +1,76 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            int N = Integer.parseInt(br.readLine().trim());
+            int[] A = new int[N];
+            String[] parts = br.readLine().trim().split("\\s+");
+
+            for (int i = 0; i < N; i++) {
+                A[i] = Integer.parseInt(parts[i]);
+            }
+
+            int[] result = solve(N, A);
+
+            for (int i = 0; i < N; i++) {
+                out.append(result[i]);
+                if (i < N - 1) out.append(" ");
+            }
+            out.append("\n");
+        }
+
+        System.out.print(out.toString());
+    }
+
+    static int[] solve(int N, int[] A) {
+        int[] ans = new int[N];
+
+        for (int i = 0; i < N; i++) {
+
+            // First and last index can never be good
+            if (i == 0 || i == N - 1) {
+                ans[i] = -1;
+                continue;
+            }
+
+            int leftRemovals = Integer.MAX_VALUE;
+            int rightRemovals = Integer.MAX_VALUE;
+
+            // Search left
+            int count = 0;
+            for (int j = i - 1; j >= 0; j--) {
+                if (A[j] < A[i]) {
+                    leftRemovals = count;
+                    break;
+                }
+                count++;
+            }
+
+            // Search right
+            count = 0;
+            for (int j = i + 1; j < N; j++) {
+                if (A[j] < A[i]) {
+                    rightRemovals = count;
+                    break;
+                }
+                count++;
+            }
+
+            if (leftRemovals == Integer.MAX_VALUE || rightRemovals == Integer.MAX_VALUE) {
+                ans[i] = -1;
+            } else {
+                ans[i] = leftRemovals + rightRemovals;
+            }
+        }
+
+        return ans;
+    }
+}
