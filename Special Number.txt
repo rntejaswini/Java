@@ -1,0 +1,92 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    static final int MOD = 1_000_000_007;
+    static final int[] PRIMES = {2,3,5,7,11,13,17,19,23,29};
+
+    public static void main(String[] args) throws Exception {
+
+        FastScanner fs = new FastScanner(System.in);
+        int n = fs.nextInt();
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = fs.nextInt();
+        }
+
+        long[] dp = new long[1 << 10];
+        dp[0] = 1; // empty subset
+
+        for (int x : arr) {
+
+            int mask = getMask(x);
+            if (mask == -1) continue; // not square-free
+
+            long[] next = dp.clone();
+
+            for (int m = 0; m < (1 << 10); m++) {
+                if ((m & mask) == 0) {
+                    next[m | mask] = (next[m | mask] + dp[m]) % MOD;
+                }
+            }
+            dp = next;
+        }
+
+        long ans = 0;
+        for (long v : dp) ans = (ans + v) % MOD;
+
+        // subtract empty subset
+        ans = (ans - 1 + MOD) % MOD;
+
+        System.out.println(ans);
+    }
+
+    // Returns prime mask or -1 if number is not square-free
+    static int getMask(int x) {
+        int mask = 0;
+        for (int i = 0; i < PRIMES.length; i++) {
+            int p = PRIMES[i];
+            int cnt = 0;
+            while (x % p == 0) {
+                x /= p;
+                cnt++;
+            }
+            if (cnt > 1) return -1; // divisible by p^2
+            if (cnt == 1) mask |= (1 << i);
+        }
+        return x > 1 ? -1 : mask; // leftover prime squared
+    }
+
+    // Fast input
+    static class FastScanner {
+        private final InputStream in;
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+
+        FastScanner(InputStream in) {
+            this.in = in;
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            while ((c = read()) <= ' ') ;
+            int val = 0;
+            while (c >= '0' && c <= '9') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val;
+        }
+    }
+}
