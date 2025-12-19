@@ -1,0 +1,83 @@
+import java.util.*;
+import java.io.*;
+
+class TestClass {
+
+    static long countSetBit(long n, int x) {
+        if (n < 0) return 0;
+
+        long cycle = 1L << x;        // 2^X
+        long half = 1L << (x - 1);   // 2^(X-1)
+
+        long fullCycles = (n + 1) / cycle;
+        long remainder = (n + 1) % cycle;
+
+        long count = fullCycles * half;
+        if (remainder > half) {
+            count += (remainder - half);
+        }
+
+        return count;
+    }
+
+    public static void main(String args[]) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
+
+        int q = fs.nextInt();
+
+        StringBuilder sb = new StringBuilder();
+
+        while (q-- > 0) {
+            long L = fs.nextLong();
+            long R = fs.nextLong();
+            int X = fs.nextInt();
+
+            long ans = countSetBit(R, X) - countSetBit(L - 1, X);
+            sb.append(ans).append("\n");
+        }
+
+        System.out.print(sb.toString());
+    }
+
+    // Fast Input
+    static class FastScanner {
+        private final InputStream in;
+        private final byte[] buffer = new byte[1024];
+        private int ptr = 0, len = 0;
+
+        FastScanner(InputStream is) {
+            in = is;
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                ptr = 0;
+                len = in.read(buffer);
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            while ((c = read()) <= ' ') ;
+            int val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val;
+        }
+
+        long nextLong() throws IOException {
+            int c;
+            while ((c = read()) <= ' ') ;
+            long val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val;
+        }
+    }
+}
