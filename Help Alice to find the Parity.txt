@@ -1,0 +1,27 @@
+import java.util.*;
+
+class TestClass {
+
+    // Function to compute XOR from 1 to n
+    static long xorTill(long n) {
+        if (n % 4 == 0) return n;
+        if (n % 4 == 1) return 1;
+        if (n % 4 == 2) return n + 1;
+        return 0;
+    }
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        long L = sc.nextLong();
+        long R = sc.nextLong();
+
+        long xorRange = xorTill(R) ^ xorTill(L - 1);
+
+        if (xorRange % 2 == 0)
+            System.out.println("even");
+        else
+            System.out.println("odd");
+
+        sc.close();
+    }
+}
