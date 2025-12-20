@@ -1,0 +1,32 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class TestClass {
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        String number = st.nextToken(); // input number as string
+        int k = Integer.parseInt(st.nextToken());
+
+        StringBuilder stack = new StringBuilder();
+
+        for (char digit : number.toCharArray()) {
+            while (k > 0 && stack.length() > 0 &&
+                   stack.charAt(stack.length() - 1) < digit) {
+                stack.deleteCharAt(stack.length() - 1);
+                k--;
+            }
+            stack.append(digit);
+        }
+
+        // If still digits need to be removed, remove from end
+        if (k > 0) {
+            stack.setLength(stack.length() - k);
+        }
+
+        System.out.print(stack.toString());
+    }
+}
