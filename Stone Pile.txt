@@ -1,0 +1,47 @@
+import java.io.*;
+import java.util.*;
+
+class Codechef {
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+        StringBuilder ans = new StringBuilder();
+
+        while (T-- > 0) {
+            int N = Integer.parseInt(br.readLine().trim());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            Deque<Integer> dq = new ArrayDeque<>();
+            for (int i = 0; i < N; i++) {
+                dq.addLast(Integer.parseInt(st.nextToken()));
+            }
+
+            boolean amanTurn = true; // Aman starts
+
+            while (dq.size() > 1) {
+                if (amanTurn) {
+                    // Move 1 once
+                    dq.addLast(dq.pollFirst());
+                    // Move 2 once
+                    dq.pollFirst();
+                } else {
+                    // Move 1 twice
+                    dq.addLast(dq.pollFirst());
+                    dq.addLast(dq.pollFirst());
+                    // Move 2 once
+                    dq.pollFirst();
+                }
+                amanTurn = !amanTurn;
+            }
+
+            int lastStone = dq.peekFirst();
+            int lastPlayer = amanTurn ? 0 : 1;
+            // because turn flips AFTER move
+
+            ans.append(lastPlayer).append(" ").append(lastStone).append("\n");
+        }
+
+        System.out.print(ans.toString());
+    }
+}
