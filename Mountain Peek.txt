@@ -1,0 +1,44 @@
+import java.util.*;
+
+public class Main {
+
+    public static int[] nextHigherPeak(int[] heights) {
+        int n = heights.length;
+        int[] result = new int[n];
+        Stack<Integer> stack = new Stack<>();
+
+        // Traverse from right to left
+        for (int i = n - 1; i >= 0; i--) {
+
+            // Remove smaller or equal elements
+            while (!stack.isEmpty() && stack.peek() <= heights[i]) {
+                stack.pop();
+            }
+
+            // If stack empty, no greater element
+            result[i] = stack.isEmpty() ? -1 : stack.peek();
+
+            // Push current height
+            stack.push(heights[i]);
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] heights = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            heights[i] = sc.nextInt();
+        }
+
+        int[] result = nextHigherPeak(heights);
+
+        for (int h : result) {
+            System.out.print(h + " ");
+        }
+        System.out.println();
+    }
+}
