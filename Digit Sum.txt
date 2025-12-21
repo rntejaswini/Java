@@ -1,0 +1,32 @@
+import java.io.*;
+import java.util.*;
+
+public class TestClass {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            int N = Integer.parseInt(br.readLine().trim());
+            String S = br.readLine().trim();
+
+            System.out.println(solve(N, S));
+        }
+    }
+
+    static int solve(int N, String S) {
+        int sumL = 0, sumR = 0;
+
+        for (int i = 0; i < N; i++) {
+            sumL += S.charAt(i) - '0';
+        }
+        for (int i = N; i < 2 * N; i++) {
+            sumR += S.charAt(i) - '0';
+        }
+
+        int diff = Math.abs(sumL - sumR);
+
+        // Minimum moves needed
+        return (diff + 8) / 9; // ceil(diff / 9)
+    }
+}
