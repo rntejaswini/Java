@@ -1,0 +1,27 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class TestClass {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        int t = Integer.parseInt(br.readLine().trim());
+        StringBuilder result = new StringBuilder();
+        
+        while (t-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            
+            int boys = Integer.parseInt(st.nextToken());
+            int girls = Integer.parseInt(st.nextToken());
+            int k = Integer.parseInt(st.nextToken());
+            
+            int boysRooms = (boys + k - 1) / k;
+            int girlsRooms = (girls + k - 1) / k;
+            
+            result.append(boysRooms + girlsRooms).append("\n");
+        }
+        
+        System.out.print(result.toString());
+    }
+}
