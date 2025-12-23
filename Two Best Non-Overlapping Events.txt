@@ -1,0 +1,55 @@
+import java.util.*;
+
+class Solution {
+    public int maxTwoEvents(int[][] events) {
+        // Sort events by start time
+        Arrays.sort(events, (a, b) -> Integer.compare(a[0], b[0]));
+
+        int n = events.length;
+
+        // Suffix max array: max value from i to end
+        int[] suffixMax = new int[n];
+        suffixMax[n - 1] = events[n - 1][2];
+
+        for (int i = n - 2; i >= 0; i--) {
+            suffixMax[i] = Math.max(suffixMax[i + 1], events[i][2]);
+        }
+
+        int answer = 0;
+
+        // Consider each event as the first event
+        for (int i = 0; i < n; i++) {
+            int currValue = events[i][2];
+
+            // Find next event with startTime >= endTime + 1
+            int nextIndex = binarySearch(events, events[i][1] + 1);
+
+            if (nextIndex < n) {
+                currValue += suffixMax[nextIndex];
+            }
+
+            answer = Math.max(answer, currValue);
+        }
+
+        return answer;
+    }
+
+    // Binary search to find first event with startTime >= target
+    private int binarySearch(int[][] events, int target) {
+        int left = 0, right = events.length - 1;
+        int result = events.length;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (events[mid][0] >= target) {
+                result = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return result;
+    }
+}
