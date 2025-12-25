@@ -1,0 +1,23 @@
+import java.util.Arrays;
+
+class Solution {
+    public long maximumHappinessSum(int[] happiness, int k) {
+
+        Arrays.sort(happiness); // sort ascending
+        
+        long sum = 0L;
+        int n = happiness.length;
+        int decrease = 0; // how many times values have been decreased
+        
+        // pick from the largest values backward
+        for (int i = n - 1; i >= 0 && k > 0; i--, k--) {
+            int value = happiness[i] - decrease;
+            if (value > 0) {
+                sum += value;
+            }
+            decrease++; // future remaining kids lose 1 happiness
+        }
+        
+        return sum;
+    }
+}
