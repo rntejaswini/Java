@@ -1,0 +1,32 @@
+import java.util.*;
+
+class TestClass {
+
+    public static void main(String args[]) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int t = sc.nextInt();
+        while (t-- > 0) {
+
+            String s = sc.next();
+            StringBuilder ans = new StringBuilder();
+
+            for (int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+
+                if (Character.isUpperCase(ch)) {
+                    // add underscore before uppercase (except at start if already lower)
+                    if (i != 0) {
+                        ans.append('_');
+                    }
+                    ans.append(Character.toLowerCase(ch));
+                } else {
+                    ans.append(ch);
+                }
+            }
+
+            System.out.println(ans.toString());
+        }
+    }
+}
