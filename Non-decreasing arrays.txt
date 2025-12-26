@@ -1,0 +1,49 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
+
+        int t = Integer.parseInt(br.readLine().trim());
+
+        while (t-- > 0) {
+
+            int n = Integer.parseInt(br.readLine().trim());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            long[] a = new long[n];
+            for (int i = 0; i < n; i++) a[i] = Long.parseLong(st.nextToken());
+
+            long[] b = new long[n];
+            long prev = 0;
+
+            for (int i = 0; i < n; i++) {
+
+                long x = a[i];
+
+                if (prev % x == 0) {
+                    b[i] = Math.max(prev, x);   // ensure non-decreasing
+                } else {
+                    long k = (prev + x - 1) / x; // ceil(prev/x)
+                    b[i] = k * x;
+                }
+
+                if (b[i] < x) b[i] = x;  // must be >= A[i]
+
+                prev = b[i];
+            }
+
+            for (int i = 0; i < n; i++) {
+                if (i > 0) out.append(' ');
+                out.append(b[i]);
+            }
+            out.append('\n');
+        }
+
+        System.out.print(out.toString());
+    }
+}
