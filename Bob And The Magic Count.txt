@@ -1,0 +1,72 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    static int gcd(int a, int b) {
+        while (b != 0) {
+            int t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine().trim());
+        StringBuilder out = new StringBuilder();
+
+        while (t-- > 0) {
+
+            int n = Integer.parseInt(br.readLine().trim());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int[] a = new int[n + 1];
+
+            int g = 0;
+            for (int i = 1; i <= n; i++) {
+                a[i] = Integer.parseInt(st.nextToken());
+                g = gcd(g, a[i]);
+            }
+
+            if (g == 1) {
+                out.append(0).append('\n');
+                continue;
+            }
+
+            int ans = Integer.MAX_VALUE;
+
+            // Case 1: operate at n
+            int g1 = 0;
+            for (int i = 1; i <= n - 1; i++)
+                g1 = gcd(g1, a[i]);
+            g1 = gcd(g1, gcd(a[n], n));
+
+            if (g1 == 1) ans = Math.min(ans, 1);
+
+            // Case 2: operate at n-1
+            int g2 = 0;
+            for (int i = 1; i <= n - 2; i++)
+                g2 = gcd(g2, a[i]);
+            g2 = gcd(g2, gcd(a[n-1], n-1));
+            g2 = gcd(g2, a[n]);
+
+            if (g2 == 1) ans = Math.min(ans, 2);
+
+            // Case 3: operate at both (n-1 , n)
+            int g3 = 0;
+            for (int i = 1; i <= n - 2; i++)
+                g3 = gcd(g3, a[i]);
+            g3 = gcd(g3, gcd(a[n-1], n-1));
+            g3 = gcd(g3, gcd(a[n], n));
+
+            if (g3 == 1) ans = Math.min(ans, 3);
+
+            out.append(ans).append('\n');
+        }
+
+        System.out.print(out.toString());
+    }
+}
