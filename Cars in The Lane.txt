@@ -1,0 +1,38 @@
+import java.util.*;
+import java.io.*;
+import java.math.BigInteger;
+
+class test {
+
+    public static void fun(long t, long a[]) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 1; i <= t; i++) {
+            long n = a[i];
+
+            // count number of open lanes (bits = 1)
+            int open = Long.bitCount(n);
+
+            // number of ways = 2^open
+            BigInteger ways = BigInteger.valueOf(2).pow(open);
+
+            sb.append(ways.toString()).append("\n");
+        }
+
+        System.out.print(sb.toString());
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        Scanner sc = new Scanner(System.in);
+        long t = sc.nextLong();
+        long a[] = new long[(int)(t + 1)];
+
+        for (int i = 1; i <= t; i++) {
+            a[i] = sc.nextLong();
+        }
+
+        fun(t, a);
+    }
+}
