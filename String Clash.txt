@@ -1,0 +1,41 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s1 = br.readLine();
+        String s2 = br.readLine();
+
+        int[] freq = new int[256];  // supports all ASCII characters
+
+        if (s1 != null) {
+            for (char ch : s1.toCharArray()) {
+                freq[ch]++;
+            }
+        }
+
+        if (s2 != null) {
+            for (char ch : s2.toCharArray()) {
+                freq[ch]++;
+            }
+        }
+
+        int maxLen = 0;
+        boolean hasOdd = false;
+
+        for (int f : freq) {
+            maxLen += (f / 2) * 2;   // add maximum even part
+            if (f % 2 == 1) {
+                hasOdd = true;       // remember that an odd exists
+            }
+        }
+
+        if (hasOdd) {
+            maxLen++;   // one odd char can be placed at center
+        }
+
+        System.out.println(maxLen);
+    }
+}
