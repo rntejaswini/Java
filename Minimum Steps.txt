@@ -1,0 +1,79 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    private static int lnds(int[] arr) {
+        ArrayList<Integer> tail = new ArrayList<>();
+        for (int x : arr) {
+            int pos = upperBound(tail, x);
+            if (pos == tail.size())
+                tail.add(x);
+            else
+                tail.set(pos, x);
+        }
+        return tail.size();
+    }
+
+    private static int upperBound(ArrayList<Integer> a, int x) {
+        int l = 0, r = a.size();
+        while (l < r) {
+            int m = (l + r) / 2;
+            if (a.get(m) > x) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        FastScanner fs = new FastScanner(System.in);
+
+        int n = fs.nextInt();
+        int[] arr = new int[n];
+        int[] neg = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = fs.nextInt();
+            neg[i] = -arr[i];
+        }
+
+        int inc = lnds(arr);
+        int dec = lnds(neg);
+
+        System.out.println(n - Math.max(inc, dec));
+    }
+
+    // FAST INPUT CLASS (HackerEarth friendly)
+    static class FastScanner {
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        private final InputStream in;
+
+        FastScanner(InputStream is) { in = is; }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            while ((c = read()) <= ' ') {
+                if (c == -1) return -1;
+            }
+            int sign = 1;
+            if (c == '-') { sign = -1; c = read(); }
+            int val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+    }
+}
