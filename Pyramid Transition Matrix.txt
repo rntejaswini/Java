@@ -1,0 +1,41 @@
+import java.util.*;
+
+class Solution {
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+        // Map each pair (AB) -> all possible chars that can sit above it
+        Map<String, List<Character>> map = new HashMap<>();
+
+        for (String s : allowed) {
+            String key = s.substring(0, 2);
+            map.computeIfAbsent(key, k -> new ArrayList<>()).add(s.charAt(2));
+        }
+
+        return build(bottom, "", 0, map);
+    }
+
+    // Try to build pyramid from current level
+    private boolean build(String curr, String next, int idx,
+                          Map<String, List<Character>> map) {
+
+            // Reached the top successfully
+            if (curr.length() == 1) return true;
+
+            // Finished constructing next level → move upward
+            if (idx == curr.length() - 1)
+                return build(next, "", 0, map);
+
+            // Pair of adjacent blocks
+            String pair = curr.substring(idx, idx + 2);
+
+            // No valid block can be placed on top → dead path
+            if (!map.containsKey(pair)) return false;
+
+            // Try every possible block allowed above this pair
+            for (char c : map.get(pair)) {
+                if (build(curr, next + c, idx + 1, map))
+                    return true;
+            }
+
+            return false;
+    }
+}
