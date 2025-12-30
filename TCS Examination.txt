@@ -1,0 +1,56 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechef
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while(T-- > 0){
+            StringTokenizer st1 = new StringTokenizer(br.readLine());
+            int dDsa = Integer.parseInt(st1.nextToken());
+            int dToc = Integer.parseInt(st1.nextToken());
+            int dDm  = Integer.parseInt(st1.nextToken());
+
+            StringTokenizer st2 = new StringTokenizer(br.readLine());
+            int sDsa = Integer.parseInt(st2.nextToken());
+            int sToc = Integer.parseInt(st2.nextToken());
+            int sDm  = Integer.parseInt(st2.nextToken());
+
+            int totalDragon = dDsa + dToc + dDm;
+            int totalSloth  = sDsa + sToc + sDm;
+
+            if(totalDragon > totalSloth){
+                System.out.println("DRAGON");
+            }
+            else if(totalSloth > totalDragon){
+                System.out.println("SLOTH");
+            }
+            else{
+                // total tied → compare DSA
+                if(dDsa > sDsa){
+                    System.out.println("DRAGON");
+                }
+                else if(sDsa > dDsa){
+                    System.out.println("SLOTH");
+                }
+                else{
+                    // DSA tied → compare TOC
+                    if(dToc > sToc){
+                        System.out.println("DRAGON");
+                    }
+                    else if(sToc > dToc){
+                        System.out.println("SLOTH");
+                    }
+                    else{
+                        // all tied
+                        System.out.println("TIE");
+                    }
+                }
+            }
+        }
+    }
+}
