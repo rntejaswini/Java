@@ -1,0 +1,70 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+
+        FastScanner fs = new FastScanner(System.in);
+        StringBuilder out = new StringBuilder();
+
+        int T = fs.nextInt();
+
+        while (T-- > 0) {
+
+            int N = fs.nextInt();
+            int X = fs.nextInt();
+
+            HashSet<Integer> set = new HashSet<>();
+
+            for (int i = 0; i < N; i++) {
+                set.add(fs.nextInt());
+            }
+
+            int distinct = set.size();
+
+            if (distinct == X)
+                out.append("Good\n");
+            else if (distinct < X)
+                out.append("Bad\n");
+            else
+                out.append("Average\n");
+        }
+
+        System.out.print(out.toString());
+    }
+
+    // Fast Input Reader (recommended for HackerEarth)
+    static class FastScanner {
+        private final BufferedInputStream bis;
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+
+        FastScanner(InputStream is) {
+            bis = new BufferedInputStream(is);
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = bis.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws IOException {
+            int c;
+            do c = read(); while (c <= ' ');
+
+            int sign = 1;
+            if (c == '-') { sign = -1; c = read(); }
+
+            int val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+    }
+}
