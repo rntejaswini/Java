@@ -1,0 +1,29 @@
+class Solution {
+    public String countAndSay(int n) {
+        if (n == 1) return "1";
+
+        String s = "1";
+
+        for (int i = 2; i <= n; i++) {
+            StringBuilder curr = new StringBuilder();
+
+            int j = 0;
+            while (j < s.length()) {
+                char ch = s.charAt(j);
+                int count = 0;
+
+                // count consecutive equal characters
+                while (j < s.length() && s.charAt(j) == ch) {
+                    j++;
+                    count++;
+                }
+
+                curr.append(count).append(ch);
+            }
+
+            s = curr.toString();
+        }
+
+        return s;
+    }
+}
