@@ -1,0 +1,46 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechefa
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0)
+        {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(st.nextToken());
+            int K = Integer.parseInt(st.nextToken());
+
+            st = new StringTokenizer(br.readLine());
+
+            long stock = 0;
+            boolean ok = true;
+            int failDay = -1;
+
+            for (int i = 1; i <= N; i++)
+            {
+                stock += Long.parseLong(st.nextToken());
+
+                if (stock < K && ok) {
+                    ok = false;
+                    failDay = i;
+                }
+
+                if (ok) stock -= K;
+            }
+
+            if (ok)
+                sb.append("YES\n");
+            else
+                sb.append("NO ").append(failDay).append("\n");
+        }
+
+        System.out.print(sb.toString());
+    }
+}
