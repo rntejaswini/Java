@@ -1,0 +1,52 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int q = Integer.parseInt(st.nextToken());
+
+        int[] arr = new int[n];
+        TreeSet<Integer> ones = new TreeSet<>();
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+            if (arr[i] == 1) ones.add(i);
+        }
+
+        StringBuilder out = new StringBuilder();
+
+        while (q-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            int type = Integer.parseInt(st.nextToken());
+            int x = Integer.parseInt(st.nextToken());
+
+            if (type == 0) {
+                // nearest left = floor(x)
+                Integer left = ones.floor(x - 1);
+                if (left == null) left = -1;
+
+                // nearest right = ceiling(x)
+                Integer right = ones.ceiling(x + 1);
+                if (right == null) right = -1;
+
+                out.append(left).append(" ").append(right).append("\n");
+            }
+            else if (type == 1) {
+                // update to 1 if currently 0
+                if (x >= 0 && x < n && arr[x] == 0) {
+                    arr[x] = 1;
+                    ones.add(x);
+                }
+            }
+        }
+
+        System.out.print(out.toString());
+    }
+}
