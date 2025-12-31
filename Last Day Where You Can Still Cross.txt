@@ -1,0 +1,79 @@
+class Solution {
+
+    static class DSU {
+        int[] parent, rank;
+
+        DSU(int n) {
+            parent = new int[n];
+            rank = new int[n];
+
+            for (int i = 0; i < n; i++) parent[i] = i;
+        }
+
+        int find(int x) {
+            if (parent[x] != x)
+                parent[x] = find(parent[x]);
+            return parent[x];
+        }
+
+        void union(int a, int b) {
+            int pa = find(a);
+            int pb = find(b);
+            if (pa == pb) return;
+
+            if (rank[pa] < rank[pb]) parent[pa] = pb;
+            else if (rank[pa] > rank[pb]) parent[pb] = pa;
+            else {
+                parent[pb] = pa;
+                rank[pa]++;
+            }
+        }
+    }
+
+    public int latestDayToCross(int row, int col, int[][] cells) {
+
+        int[][] grid = new int[row][col];   // 0 = water, 1 = land (we add in reverse)
+
+        int total = row * col;
+        int top = total;        // virtual top node
+        int bottom = total + 1; // virtual bottom node
+
+        DSU dsu = new DSU(total + 2);
+
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+
+        // process days in reverse
+        for (int day = cells.length - 1; day >= 0; day--) {
+
+            int r = cells[day][0] - 1;
+            int c = cells[day][1] - 1;
+
+            grid[r][c] = 1;   // restore land
+
+            int id = r * col + c;
+
+            // connect with neighbors if they are land
+            for (int[] d : dirs) {
+                int nr = r + d[0], nc = c + d[1];
+                if (nr >= 0 && nr < row && nc >= 0 && nc < col && grid[nr][nc] == 1) {
+                    int nid = nr * col + nc;
+                    dsu.union(id, nid);
+                }
+            }
+
+            // connect to top row
+            if (r == 0)
+                dsu.union(id, top);
+
+            // connect to bottom row
+            if (r == row - 1)
+                dsu.union(id, bottom);
+
+            // if path exists → this is the last valid day
+            if (dsu.find(top) == dsu.find(bottom))
+                return day;
+        }
+
+        return 0;
+    }
+}
