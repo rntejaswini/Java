@@ -1,0 +1,24 @@
+import java.util.*;
+
+class TestClass {
+
+    static final long MOD = 1000000007L;
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        long prod = 1;
+
+        for (int i = 0; i < n; i++) {
+            long x = sc.nextLong();
+            prod = (prod * ((x + 1) % MOD)) % MOD;
+        }
+
+        // subtract 1 for empty subset
+        long ans = (prod - 1 + MOD) % MOD;
+
+        System.out.println(ans);
+    }
+}
