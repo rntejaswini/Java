@@ -1,0 +1,44 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(br.readLine().trim());
+        String[] arr = br.readLine().trim().split(" ");
+
+        int[] a = new int[n];
+
+        for(int i = 0; i < n; i++){
+            a[i] = Integer.parseInt(arr[i]);
+        }
+
+        // Step 1: XOR of all numbers
+        int xor = 0;
+        for(int x : a){
+            xor ^= x;
+        }
+
+        // Step 2: find rightmost set bit
+        int setBit = xor & -xor;
+
+        int num1 = 0, num2 = 0;
+
+        // Step 3: divide numbers into two groups
+        for(int x : a){
+            if((x & setBit) != 0)
+                num1 ^= x;
+            else
+                num2 ^= x;
+        }
+
+        // Step 4: print in ascending order
+        if(num1 < num2)
+            System.out.println(num1 + " " + num2);
+        else
+            System.out.println(num2 + " " + num1);
+    }
+}
