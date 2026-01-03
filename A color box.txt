@@ -1,0 +1,42 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
+        int t = Integer.parseInt(br.readLine().trim());
+
+        while (t-- > 0) {
+
+            int n = Integer.parseInt(br.readLine().trim());
+
+            String[] aStr = br.readLine().trim().split(" ");
+            String[] bStr = br.readLine().trim().split(" ");
+
+            long surplus = 0; 
+            long deficit = 0;
+
+            for (int i = 0; i < n; i++) {
+                long a = Long.parseLong(aStr[i]);
+                long b = Long.parseLong(bStr[i]);
+
+                if (a >= b) {
+                    surplus += (a - b) / 2;   // only pairs are usable
+                } else {
+                    deficit += (b - a);
+                }
+            }
+
+            if (surplus >= deficit)
+                sb.append("Yes\n");
+            else
+                sb.append("No\n");
+        }
+
+        System.out.print(sb.toString());
+    }
+}
