@@ -1,0 +1,132 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    /*
+     * Complete the 'twoPluses' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts STRING_ARRAY grid as parameter.
+     */
+
+    public static int twoPluses(List<String> grid) {
+
+    int n = grid.size();
+    int m = grid.get(0).length();
+
+    char[][] arr = new char[n][m];
+    for (int i = 0; i < n; i++)
+        arr[i] = grid.get(i).toCharArray();
+
+    List<boolean[][]> plusMasks = new ArrayList<>();
+    List<Integer> areas = new ArrayList<>();
+
+    // generate all pluses
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (arr[i][j] != 'G') continue;
+
+            int arm = 0;
+
+            while (true) {
+                if (i - arm < 0 || i + arm >= n ||
+                    j - arm < 0 || j + arm >= m)
+                    break;
+
+                if (arr[i-arm][j] != 'G' ||
+                    arr[i+arm][j] != 'G' ||
+                    arr[i][j-arm] != 'G' ||
+                    arr[i][j+arm] != 'G')
+                    break;
+
+                boolean[][] mask = new boolean[n][m];
+
+                mask[i][j] = true;
+
+                for (int k = 1; k <= arm; k++) {
+                    mask[i-k][j] = true;
+                    mask[i+k][j] = true;
+                    mask[i][j-k] = true;
+                    mask[i][j+k] = true;
+                }
+
+                plusMasks.add(mask);
+                areas.add(4 * arm + 1);
+
+                arm++;
+            }
+        }
+    }
+
+    int maxProduct = 0;
+
+    for (int a = 0; a < plusMasks.size(); a++) {
+            for (int b = a + 1; b < plusMasks.size(); b++) {
+
+                boolean overlap = false;
+
+                boolean[][] A = plusMasks.get(a);
+                boolean[][] B = plusMasks.get(b);
+
+                for (int i = 0; i < n && !overlap; i++) {
+                    for (int j = 0; j < m; j++) {
+                        if (A[i][j] && B[i][j]) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!overlap) {
+                    int prod = areas.get(a) * areas.get(b);
+                    if (prod > maxProduct)
+                        maxProduct = prod;
+                }
+            }
+    }
+
+    return maxProduct;
+}
+
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+        int n = Integer.parseInt(firstMultipleInput[0]);
+
+        int m = Integer.parseInt(firstMultipleInput[1]);
+
+        List<String> grid = IntStream.range(0, n).mapToObj(i -> {
+            try {
+                return bufferedReader.readLine();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        })
+            .collect(toList());
+
+        int result = Result.twoPluses(grid);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
