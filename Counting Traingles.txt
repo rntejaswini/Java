@@ -1,0 +1,33 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[] ) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());
+
+        Map<String, Integer> freq = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            long a = Long.parseLong(st.nextToken());
+            long b = Long.parseLong(st.nextToken());
+            long c = Long.parseLong(st.nextToken());
+
+            long[] sides = {a, b, c};
+            Arrays.sort(sides); // normalize triangle
+
+            String key = sides[0] + "#" + sides[1] + "#" + sides[2];
+            freq.put(key, freq.getOrDefault(key, 0) + 1);
+        }
+
+        int uniqueCount = 0;
+        for (int v : freq.values()) {
+            if (v == 1) uniqueCount++;
+        }
+
+        System.out.print(uniqueCount);
+    }
+}
