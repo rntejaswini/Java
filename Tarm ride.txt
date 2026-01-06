@@ -1,0 +1,50 @@
+import java.io.*;
+import java.util.*;
+
+
+public class TestClass {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter wr = new PrintWriter(System.out);
+         int N = Integer.parseInt(br.readLine().trim());
+         int start = Integer.parseInt(br.readLine().trim());
+         int finish = Integer.parseInt(br.readLine().trim());
+         String[] arr_Ticket_cost = br.readLine().split(" ");
+         int[] Ticket_cost = new int[N];
+         for(int i_Ticket_cost = 0; i_Ticket_cost < arr_Ticket_cost.length; i_Ticket_cost++)
+         {
+         	Ticket_cost[i_Ticket_cost] = Integer.parseInt(arr_Ticket_cost[i_Ticket_cost]);
+         }
+
+         long out_ = solve(N, start, finish, Ticket_cost);
+         System.out.println(out_);
+
+         wr.close();
+         br.close();
+    }
+   static long solve(int N, int start, int finish, int[] Ticket_cost){
+    
+    // convert to 0-based index
+    int s = start - 1;
+    int f = finish - 1;
+
+    // clockwise traversal
+    long clockwise = 0;
+    int i = s;
+    while (i != f) {
+        clockwise += Ticket_cost[i];
+        i = (i + 1) % N;
+    }
+
+    // anti-clockwise traversal
+    long anticlockwise = 0;
+    i = s;
+    while (i != f) {
+        int prev = (i - 1 + N) % N;
+        anticlockwise += Ticket_cost[prev];
+        i = prev;
+    }
+
+    return Math.min(clockwise, anticlockwise);
+}
+}
