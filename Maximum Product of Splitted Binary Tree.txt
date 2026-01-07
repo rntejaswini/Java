@@ -1,0 +1,36 @@
+class Solution {
+
+    private static final long MOD = 1_000_000_007L;
+    long totalSum = 0;
+    long maxProduct = 0;
+
+    public int maxProduct(TreeNode root) {
+        // 1st DFS — get total tree sum
+        totalSum = getSum(root);
+
+        // 2nd DFS — compute best split
+        computeMax(root);
+
+        return (int)(maxProduct % MOD);
+    }
+
+    // Returns subtree sum
+    private long getSum(TreeNode node) {
+        if (node == null) return 0;
+        return node.val + getSum(node.left) + getSum(node.right);
+    }
+
+    // DFS to evaluate split product at each subtree
+    private long computeMax(TreeNode node) {
+        if (node == null) return 0;
+
+        long subSum = node.val 
+                    + computeMax(node.left) 
+                    + computeMax(node.right);
+
+        long product = subSum * (totalSum - subSum);
+        maxProduct = Math.max(maxProduct, product);
+
+        return subSum;
+    }
+}
