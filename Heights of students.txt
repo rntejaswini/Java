@@ -1,0 +1,131 @@
+import java.util.*;
+
+public class TestClass {
+
+    // Fenwick Tree / BIT
+    static class BIT {
+        int n;
+        long[] bit;
+        BIT(int n) { this.n = n; bit = new long[n + 1]; }
+
+        void update(int i, long v) {
+            while (i <= n) {
+                bit[i] += v;
+                i += (i & -i);
+            }
+        }
+
+        long query(int i) {
+            long s = 0;
+            while (i > 0) {
+                s += bit[i];
+                i -= (i & -i);
+            }
+            return s;
+        }
+    }
+
+    // Fast scanner
+    static class FastScanner {
+        java.io.BufferedInputStream in;
+        byte[] buffer = new byte[1 << 16];
+        int ptr = 0, len = 0;
+
+        FastScanner(java.io.InputStream is) {
+            in = new java.io.BufferedInputStream(is);
+        }
+
+        int read() throws java.io.IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        int nextInt() throws java.io.IOException {
+            int c, sign = 1, val = 0;
+            do c = read(); while (c <= ' ');
+            if (c == '-') { sign = -1; c = read(); }
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        FastScanner fs = new FastScanner(System.in);
+
+        int t = fs.nextInt();
+
+        while (t-- > 0) {
+
+            int n = fs.nextInt();
+            int[] h = new int[n];
+            for (int i = 0; i < n; i++) h[i] = fs.nextInt();
+
+            // ---- coordinate compression ----
+            int[] comp = h.clone();
+            Arrays.sort(comp);
+            int m = 0;
+            for (int i = 1; i < n; i++)
+                if (comp[i] != comp[m]) comp[++m] = comp[i];
+            m++;
+
+            int[] rank = new int[n];
+            for (int i = 0; i < n; i++)
+                rank[i] = Arrays.binarySearch(comp, 0, m, h[i]) + 1;
+
+            long[] freq = new long[m + 1];
+            for (int r : rank) freq[r]++;
+            long[] prefix = new long[m + 1];
+            for (int i = 1; i <= m; i++)
+                prefix[i] = prefix[i - 1] + freq[i];
+
+            // ---- count greater-before (happiness of each student) ----
+            BIT bitL = new BIT(m);
+            long[] inv = new long[n];
+            long total = 0;
+
+            for (int i = 0; i < n; i++) {
+                int r = rank[i];
+                long seen = bitL.query(m);
+                long leq = bitL.query(r);
+                long greaterBefore = seen - leq;
+                inv[i] = greaterBefore;
+                total += greaterBefore;
+                bitL.update(r, 1);
+            }
+
+            // ---- count smaller-after (students helped by removing k) ----
+            BIT bitR = new BIT(m);
+            long[] smallerRight = new long[n];
+
+            for (int i = n - 1; i >= 0; i--) {
+                int r = rank[i];
+                smallerRight[i] = bitR.query(r - 1);
+                bitR.update(r, 1);
+            }
+
+            // ---- compute best move ----
+            long best = Long.MAX_VALUE;
+
+            for (int i = 0; i < n; i++) {
+                int r = rank[i];
+
+                long oldH = inv[i];
+                long reduceOthers = smallerRight[i];
+                long tallerWhenAtEnd = n - prefix[r];   // strictly greater
+
+                long candidate = total - oldH - reduceOthers + tallerWhenAtEnd;
+                if (candidate < best) best = candidate;
+            }
+
+            System.out.println(best);
+        }
+    }
+}
