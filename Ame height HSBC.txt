@@ -1,0 +1,33 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        
+        while (T-- > 0) {
+            int N = sc.nextInt();
+            int S = sc.nextInt();
+            
+            int[] arr = new int[N];
+            for (int i = 0; i < N; i++) {
+                arr[i] = sc.nextInt();
+            }
+            
+            int result = solve(arr, N, S);
+            System.out.println(result);
+        }
+        sc.close();
+    }
+    
+    static int solve(int[] arr, int N, int S) {
+        int left = 0, right = 0;
+        
+        for (int h : arr) {
+            if (h < S) left++;
+            else if (h > S) right++;
+        }
+        
+        return Math.abs(left - right);
+    }
+}
