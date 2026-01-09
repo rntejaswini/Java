@@ -1,0 +1,61 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+    static final long MOD = 1000000007L;
+
+    public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        int t = Integer.parseInt(br.readLine().trim());
+
+        while (t-- > 0) {
+
+            // Read a, b, c, d, m
+            st = new StringTokenizer(br.readLine());
+            long a = Long.parseLong(st.nextToken());
+            long b = Long.parseLong(st.nextToken());
+            long c = Long.parseLong(st.nextToken());
+            long d = Long.parseLong(st.nextToken());
+            long m = Long.parseLong(st.nextToken());
+
+            int n = Integer.parseInt(br.readLine().trim());
+
+            long[] arr = new long[n];
+            st = new StringTokenizer(br.readLine());
+            for (int i = 0; i < n; i++) {
+                arr[i] = Long.parseLong(st.nextToken());
+            }
+
+            // Count frequency of y^2 % m
+            HashMap<Long, Long> ySquareCount = new HashMap<>();
+
+            for (long y : arr) {
+                long yMod = ((y % m) + m) % m;
+                long ySq = (yMod * yMod) % m;
+                ySquareCount.put(ySq, ySquareCount.getOrDefault(ySq, 0L) + 1);
+            }
+
+            long answer = 0;
+
+            // For each x, compute RHS and add matching y counts
+            for (long x : arr) {
+                long xMod = ((x % m) + m) % m;
+
+                long rhs = (
+                        (a * xMod % m * xMod % m * xMod % m)
+                      + (b * xMod % m * xMod % m)
+                      + (c * xMod % m)
+                      + d
+                ) % m;
+
+                rhs = (rhs + m) % m;
+
+                answer = (answer + ySquareCount.getOrDefault(rhs, 0L)) % MOD;
+            }
+
+            System.out.println(answer);
+        }
+    }
+}
