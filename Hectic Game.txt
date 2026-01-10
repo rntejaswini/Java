@@ -1,0 +1,70 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+class TestClass {
+
+    static class Task {
+        int start, end;
+        Task(int s, int e) {
+            start = s;
+            end = e;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+
+            int n = Integer.parseInt(br.readLine().trim());
+            List<Task> tasks = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                String[] p = br.readLine().trim().split(" ");
+                tasks.add(new Task(Integer.parseInt(p[0]), Integer.parseInt(p[1])));
+            }
+
+            int aliceXor = 0, bobXor = 0;
+            boolean aliceTurn = true;
+
+            while (!tasks.isEmpty()) {
+
+                // Sort by ending time
+                tasks.sort((a, b) -> a.end - b.end);
+
+                List<Task> chosen = new ArrayList<>();
+                int lastEnd = Integer.MIN_VALUE;
+
+                // STRICT non-overlapping selection
+                for (Task t : tasks) {
+                    if (t.start > lastEnd) {
+                        chosen.add(t);
+                        lastEnd = t.end;
+                    }
+                }
+
+                int count = chosen.size();
+
+                if (aliceTurn) {
+                    aliceXor ^= count;
+                } else {
+                    bobXor ^= count;
+                }
+
+                tasks.removeAll(chosen);
+                aliceTurn = !aliceTurn;
+            }
+
+            if (aliceXor > bobXor) {
+                System.out.println("Alice");
+            } else if (bobXor > aliceXor) {
+                System.out.println("Bob");
+            } else {
+                System.out.println("Tie");
+            }
+        }
+    }
+}
