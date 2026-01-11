@@ -1,0 +1,50 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            String s = br.readLine().trim();
+            String t = br.readLine().trim();
+
+            int[] fs = new int[26];
+            int[] ft = new int[26];
+
+            int q = 0;
+
+            for (char c : s.toCharArray()) {
+                if (c == '?') {
+                    q++;
+                } else {
+                    fs[c - 'a']++;
+                }
+            }
+
+            for (char c : t.toCharArray()) {
+                ft[c - 'a']++;
+            }
+
+            int required = 0;
+            boolean possible = true;
+
+            for (int i = 0; i < 26; i++) {
+                if (fs[i] > ft[i]) {
+                    possible = false;
+                    break;
+                }
+                required += (ft[i] - fs[i]);
+            }
+
+            if (possible && required <= q) {
+                System.out.println("Yes");
+            } else {
+                System.out.println("No");
+            }
+        }
+    }
+}
