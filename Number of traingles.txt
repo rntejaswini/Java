@@ -1,0 +1,46 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class TestClass {
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(st.nextToken());
+            int b1 = Integer.parseInt(st.nextToken()) - 1;
+            int b2 = Integer.parseInt(st.nextToken()) - 1;
+
+            boolean[] black = new boolean[N];
+            black[b1] = true;
+            black[b2] = true;
+
+            int whiteCount = N - 2;
+
+            // Count white-white edges
+            int whiteEdges = 0;
+            for (int i = 0; i < N; i++) {
+                int next = (i + 1) % N;
+                if (!black[i] && !black[next]) {
+                    whiteEdges++;
+                }
+            }
+
+            // Count three consecutive white vertices
+            int tripleWhite = 0;
+            for (int i = 0; i < N; i++) {
+                int j = (i + 1) % N;
+                int k = (i + 2) % N;
+                if (!black[i] && !black[j] && !black[k]) {
+                    tripleWhite++;
+                }
+            }
+
+            long result = (long) whiteEdges * (whiteCount - 2) - tripleWhite;
+            System.out.println(result);
+        }
+    }
+}
