@@ -1,0 +1,43 @@
+import java.io.*;
+
+class Result {
+
+    /*
+     * Complete the 'strangeCounter' function below.
+     *
+     * The function is expected to return a LONG_INTEGER.
+     * The function accepts LONG_INTEGER t as parameter.
+     */
+
+    public static long strangeCounter(long t) {
+        long cycleStartValue = 3;
+        long time = t;
+
+        // Find the cycle where time t belongs
+        while (time > cycleStartValue) {
+            time -= cycleStartValue;
+            cycleStartValue *= 2;
+        }
+
+        // Value at time t
+        return cycleStartValue - time + 1;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader =
+                new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter =
+                new BufferedWriter(new OutputStreamWriter(System.out));
+
+        long t = Long.parseLong(bufferedReader.readLine().trim());
+
+        long result = Result.strangeCounter(t);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedWriter.flush();
+    }
+}
