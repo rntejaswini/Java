@@ -1,0 +1,22 @@
+import java.io.*;
+
+class TestClass {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine().trim();
+
+        int maxLen = 0;
+        int currLen = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 || s.charAt(i) != s.charAt(i - 1)) {
+                currLen++;
+            } else {
+                currLen = 1;
+            }
+            maxLen = Math.max(maxLen, currLen);
+        }
+
+        System.out.println(maxLen);
+    }
+}
