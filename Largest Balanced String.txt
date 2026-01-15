@@ -1,0 +1,33 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            String s = br.readLine().trim();
+
+            int roundOpen = 0, roundClose = 0;
+            int squareOpen = 0, squareClose = 0;
+            int curlyOpen = 0, curlyClose = 0;
+
+            for (char c : s.toCharArray()) {
+                if (c == '(') roundOpen++;
+                else if (c == ')') roundClose++;
+                else if (c == '[') squareOpen++;
+                else if (c == ']') squareClose++;
+                else if (c == '{') curlyOpen++;
+                else if (c == '}') curlyClose++;
+            }
+
+            int pairs = 0;
+            pairs += Math.min(roundOpen, roundClose);
+            pairs += Math.min(squareOpen, squareClose);
+            pairs += Math.min(curlyOpen, curlyClose);
+
+            System.out.println(pairs * 2);
+        }
+    }
+}
