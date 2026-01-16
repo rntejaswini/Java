@@ -1,0 +1,34 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        long x1 = sc.nextLong();   // bottom-left x
+        long y1 = sc.nextLong();   // bottom-left y
+        long l  = sc.nextLong();   // side length
+        long T  = sc.nextLong();   // time
+
+        long x2 = x1 + l;
+        long y2 = y1 + l;
+
+        long count = 0;
+
+        long startX = Math.max(x1, 0);
+        long endX   = Math.min(x2, T);
+
+        for (long x = startX; x <= endX; x++) {
+            long maxY = T - x;
+
+            long lowY  = Math.max(y1, 0);
+            long highY = Math.min(y2, maxY);
+
+            if (lowY <= highY) {
+                count += (highY - lowY + 1);
+            }
+        }
+
+        System.out.println(count);
+        sc.close();
+    }
+}
