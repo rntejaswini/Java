@@ -1,0 +1,26 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(br.readLine().trim());
+        String s = br.readLine().trim();
+        String t = br.readLine().trim();
+
+        int totalDays = 0;
+
+        for (int i = 0; i < n; i++) {
+            int from = s.charAt(i) - 'A';
+            int to = t.charAt(i) - 'A';
+
+            int diff = (to - from + 26) % 26;
+
+            totalDays += (diff / 13) + (diff % 13);
+        }
+
+        System.out.println(totalDays);
+    }
+}
