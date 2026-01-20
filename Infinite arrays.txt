@@ -1,0 +1,97 @@
+import java.io.*;
+import java.util.*;
+
+public class TestClass {
+
+    static final long MOD = 1000000007L;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int T = Integer.parseInt(br.readLine().trim());
+        StringBuilder result = new StringBuilder();
+
+        while (T-- > 0) {
+
+            int N = Integer.parseInt(br.readLine().trim());
+            String[] arr = br.readLine().trim().split(" ");
+            int[] A = new int[N];
+
+            for (int i = 0; i < N; i++) {
+                A[i] = Integer.parseInt(arr[i]);
+            }
+
+            int Q = Integer.parseInt(br.readLine().trim());
+            long[] L = new long[Q];
+            long[] R = new long[Q];
+
+            String[] lArr = br.readLine().trim().split(" ");
+            for (int i = 0; i < Q; i++) {
+                L[i] = Long.parseLong(lArr[i]);
+            }
+
+            String[] rArr = br.readLine().trim().split(" ");
+            for (int i = 0; i < Q; i++) {
+                R[i] = Long.parseLong(rArr[i]);
+            }
+
+            long[] ans = solve(A, L, R);
+
+            for (int i = 0; i < ans.length; i++) {
+                result.append(ans[i]).append(" ");
+            }
+            result.append("\n");
+        }
+
+        System.out.print(result.toString());
+    }
+
+    static long[] solve(int[] A, long[] L, long[] R) {
+
+        int N = A.length;
+
+        // Prefix sum of A
+        long[] prefix = new long[N];
+        prefix[0] = A[0];
+        for (int i = 1; i < N; i++) {
+            prefix[i] = (prefix[i - 1] + A[i]) % MOD;
+        }
+
+        long total = prefix[N - 1];  // sum of one array A
+
+        long[] answers = new long[L.length];
+
+        for (int i = 0; i < L.length; i++) {
+            long left = L[i];
+            long right = R[i];
+
+            long sumR = getSum(right, N, total, prefix);
+            long sumL = getSum(left - 1, N, total, prefix);
+
+            long ans = (sumR - sumL) % MOD;
+            if (ans < 0) ans += MOD;
+
+            answers[i] = ans;
+        }
+
+        return answers;
+    }
+
+    // Sum from 1 to x in infinite array B
+    static long getSum(long x, int N, long total, long[] prefix) {
+
+        if (x <= 0) return 0;
+
+        long fullCycles = x / N;
+        long rem = x % N;
+
+        long res = (fullCycles % MOD) * (total % MOD);
+        res %= MOD;
+
+        if (rem > 0) {
+            res = (res + prefix[(int) rem - 1]) % MOD;
+        }
+
+        return res;
+    }
+}
