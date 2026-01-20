@@ -1,0 +1,40 @@
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+
+class Result {
+
+    public static String funnyString(String s) {
+
+        String rev = new StringBuilder(s).reverse().toString();
+
+        for (int i = 1; i < s.length(); i++) {
+            int diff1 = Math.abs(s.charAt(i) - s.charAt(i - 1));
+            int diff2 = Math.abs(rev.charAt(i) - rev.charAt(i - 1));
+
+            if (diff1 != diff2) {
+                return "Not Funny";
+            }
+        }
+
+        return "Funny";
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int q = Integer.parseInt(bufferedReader.readLine().trim());
+
+        while (q-- > 0) {
+            String s = bufferedReader.readLine();
+            String result = Result.funnyString(s);
+            bufferedWriter.write(result + "\n");
+        }
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
