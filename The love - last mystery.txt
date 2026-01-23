@@ -1,0 +1,38 @@
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+
+class Result {
+
+    public static int theLoveLetterMystery(String s) {
+        int i = 0, j = s.length() - 1;
+        int ops = 0;
+
+        while (i < j) {
+            ops += Math.abs(s.charAt(i) - s.charAt(j));
+            i++;
+            j--;
+        }
+
+        return ops;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int q = Integer.parseInt(bufferedReader.readLine().trim());
+
+        for (int i = 0; i < q; i++) {
+            String s = bufferedReader.readLine().trim();
+            int result = Result.theLoveLetterMystery(s);
+            bufferedWriter.write(String.valueOf(result));
+            bufferedWriter.newLine();
+        }
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
