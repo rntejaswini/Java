@@ -1,0 +1,149 @@
+import java.util.*;
+
+public class Solution {
+
+    static class Pair implements Comparable<Pair> {
+        long sum;
+        int left;
+        int id;
+        int posKey;
+
+        Pair(long s, int l, int id, int p) {
+            this.sum = s;
+            this.left = l;
+            this.id = id;
+            this.posKey = p;
+        }
+
+        @Override
+        public int compareTo(Pair o) {
+            if (this.sum != o.sum)
+                return Long.compare(this.sum, o.sum);
+            return Integer.compare(this.posKey, o.posKey);
+        }
+    }
+
+    static class Edge {
+        int left;
+        int right;
+        boolean valid;
+
+        Edge(int l, int r) {
+            left = l;
+            right = r;
+            valid = true;
+        }
+    }
+
+    public int minimumPairRemoval(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) return 0;
+
+        int maxNodes = 2 * n + 5;
+        long[] val = new long[maxNodes];
+        int[] nxt = new int[maxNodes];
+        int[] prv = new int[maxNodes];
+        boolean[] alive = new boolean[maxNodes];
+        int[] posKey = new int[maxNodes];
+
+        int id = 0;
+        for (int i = 0; i < n; i++) {
+            val[id] = nums[i];
+            nxt[id] = i + 1;
+            prv[id] = i - 1;
+            alive[id] = true;
+            posKey[id] = i;
+            id++;
+        }
+        nxt[n - 1] = -1;
+
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        List<Edge> edges = new ArrayList<>();
+        int[] edgeIdAtLeft = new int[maxNodes];
+
+        int pid = 0;
+        for (int i = 0; i < n - 1; i++) {
+            edges.add(new Edge(i, i + 1));
+            edgeIdAtLeft[i] = pid;
+            pq.add(new Pair(val[i] + val[i + 1], i, pid, posKey[i]));
+            pid++;
+        }
+
+        int violations = 0;
+        for (int i = 0; i < n - 1; i++) {
+            if (val[i] > val[i + 1]) violations++;
+        }
+
+        int ops = 0;
+
+        while (violations > 0) {
+            Pair p = pq.poll();
+            if (p == null) break;
+
+            // if edge invalid, skip
+            if (!edges.get(p.id).valid) continue;
+
+            int left = p.left;
+            if (!alive[left]) continue;
+
+            int right = nxt[left];
+            if (right == -1 || !alive[right]) continue;
+
+            // Invalidate edges that are going to disappear
+            int leftEdgeId = edgeIdAtLeft[left];
+            edges.get(leftEdgeId).valid = false;
+
+            int L = prv[left];
+            if (L != -1) {
+                edges.get(edgeIdAtLeft[L]).valid = false;
+            }
+
+            int R = nxt[right];
+            if (R != -1) {
+                edges.get(edgeIdAtLeft[right]).valid = false;
+            }
+
+            // Remove old violations safely
+            if (L != -1 && val[L] > val[left]) violations--;
+            if (val[left] > val[right]) violations--;
+            if (R != -1 && val[right] > val[R]) violations--;
+
+            // Merge left and right
+            int w = id++;
+            val[w] = val[left] + val[right];
+            alive[w] = true;
+            posKey[w] = posKey[left];
+
+            prv[w] = L;
+            nxt[w] = R;
+            if (L != -1) nxt[L] = w;
+            if (R != -1) prv[R] = w;
+
+            alive[left] = false;
+            alive[right] = false;
+
+            // Add new violations
+            if (L != -1 && val[L] > val[w]) violations++;
+            if (R != -1 && val[w] > val[R]) violations++;
+
+            // Add new edges and push to PQ
+            if (L != -1) {
+                edges.add(new Edge(L, w));
+                edgeIdAtLeft[L] = pid;
+                pq.add(new Pair(val[L] + val[w], L, pid, posKey[L]));
+                pid++;
+            }
+
+            if (R != -1) {
+                edges.add(new Edge(w, R));
+                edgeIdAtLeft[w] = pid;
+                pq.add(new Pair(val[w] + val[R], w, pid, posKey[w]));
+                pid++;
+            }
+
+            ops++;
+        }
+
+        return ops;
+    }
+}
