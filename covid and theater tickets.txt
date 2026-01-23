@@ -1,0 +1,66 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechef
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        FastScanner fs = new FastScanner(System.in);
+        int T = fs.nextInt();
+
+        while (T-- > 0) {
+            long N = fs.nextLong();
+            long M = fs.nextLong();
+
+            long rows = (N + 1) / 2;   // ceil(N/2)
+            long seats = (M + 1) / 2;  // ceil(M/2)
+
+            System.out.println(rows * seats);
+        }
+    }
+
+    // Fast Scanner for fast input
+    static class FastScanner {
+        private final InputStream in;
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+
+        FastScanner(InputStream is) {
+            in = is;
+        }
+
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buffer[ptr++];
+        }
+
+        long nextLong() throws IOException {
+            long sign = 1;
+            int c;
+            do {
+                c = read();
+            } while (c <= ' ');
+
+            if (c == '-') {
+                sign = -1;
+                c = read();
+            }
+
+            long val = 0;
+            while (c > ' ') {
+                val = val * 10 + (c - '0');
+                c = read();
+            }
+            return val * sign;
+        }
+
+        int nextInt() throws IOException {
+            return (int) nextLong();
+        }
+    }
+}
