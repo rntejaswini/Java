@@ -1,0 +1,62 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+class TestClass {
+    static int[][] directions = {
+        {1, 0}, {-1, 0}, {0, 1}, {0, -1},
+        {1, 1}, {-1, -1}
+    };
+
+    public static void main(String args[] ) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            char[][] grid = new char[3][3];
+
+            // Read 3 lines for the grid
+            for (int i = 0; i < 3; i++) {
+                String line = br.readLine();
+                if (line == null || line.length() == 0) {
+                    i--;
+                    continue;
+                }
+                grid[i] = line.toCharArray();
+            }
+
+            boolean canReach = bfs(grid);
+            System.out.println(canReach ? "YES" : "NO");
+        }
+    }
+
+    private static boolean bfs(char[][] grid) {
+        boolean[][] visited = new boolean[3][3];
+        Queue<int[]> queue = new LinkedList<>();
+
+        queue.add(new int[]{0, 0});
+        visited[0][0] = true;
+
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int x = cell[0], y = cell[1];
+
+            if (x == 2 && y == 2) return tru
+e;
+
+            for (int[] dir : directions) {
+                int nx = x + dir[0];
+                int ny = y + dir[1];
+
+                if (nx >= 0 && nx < 3 && ny >= 0 && ny < 3) {
+                    if (!visited[nx][ny] && grid[nx][ny] == '.') {
+                        visited[nx][ny] = true;
+                        queue.add(new int[]{nx, ny});
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}
