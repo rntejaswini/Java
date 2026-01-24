@@ -1,0 +1,96 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+class Result {
+
+    public static int activityNotifications(java.util.List<Integer> expenditure, int d) {
+        int notifications = 0;
+        int[] count = new int[201]; // values range from 0 to 200
+
+        // Build initial frequency array
+        for (int i = 0; i < d; i++) {
+            count[expenditure.get(i)]++;
+        }
+
+        for (int i = d; i < expenditure.size(); i++) {
+            double median = findMedian(count, d);
+
+            if (expenditure.get(i) >= 2 * median) {
+                notifications++;
+            }
+
+            // Update sliding window
+            count[expenditure.get(i - d)]--;
+            count[expenditure.get(i)]++;
+        }
+
+        return notifications;
+    }
+
+    private static double findMedian(int[] count, int d) {
+        int cumulative = 0;
+
+        if (d % 2 == 1) {
+            int middle = d / 2 + 1;
+            for (int i = 0; i < count.length; i++) {
+                cumulative += count[i];
+                if (cumulative >= middle) {
+                    return i;
+                }
+            }
+        } else {
+            int middle1 = d / 2;
+            int middle2 = middle1 + 1;
+            int m1 = -1;
+            int m2 = -1;
+
+            for (int i = 0; i < count.length; i++) {
+                cumulative += count[i];
+                if (cumulative >= middle1 && m1 == -1) {
+                    m1 = i;
+                }
+                if (cumulative >= middle2) {
+                    m2 = i;
+                    break;
+                }
+            }
+            return (m1 + m2) / 2.0;
+        }
+        return 0;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+        int n = Integer.parseInt(firstMultipleInput[0]);
+
+        int d = Integer.parseInt(firstMultipleInput[1]);
+
+        List<Integer> expenditure = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+            .map(Integer::parseInt)
+            .collect(toList());
+
+        int result = Result.activityNotifications(expenditure, d);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
