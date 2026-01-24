@@ -1,0 +1,53 @@
+import java.io.*;
+import java.util.*;
+public class TestClass {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter wr = new PrintWriter(System.out);
+         int N = Integer.parseInt(br.readLine().trim());
+         int C = Integer.parseInt(br.readLine().trim());
+         int[][] audience = new int[N][3];
+         for(int i_audience = 0; i_audience < N; i_audience++)
+         {
+         	String[] arr_audience = br.readLine().split(" ");
+         	for(int j_audience = 0; j_audience < arr_audience.length; j_audience++)
+         	{
+         		audience[i_audience][j_audience] = Integer.parseInt(arr_audience[j_audience]);
+         	}
+         }
+
+         String out_ = solution(N, C, audience);
+         System.out.println(out_);
+
+         wr.close();
+         br.close();
+    }
+   static String solution(int N, int C, int[][] audience) {
+
+    // TreeMap keeps events sorted by time
+    TreeMap<Integer, Integer> events = new TreeMap<>();
+
+    for (int i = 0; i < N; i++) {
+        int strength = audience[i][0];
+        int entry = audience[i][1];
+        int exit = audience[i][2];
+
+        // Entry event
+        events.put(entry, events.getOrDefault(entry, 0) + strength);
+
+        // Exit is inclusive, so subtract after exit time
+        events.put(exit + 1, events.getOrDefault(exit + 1, 0) - strength);
+    }
+
+    int currentPeople = 0;
+
+    for (int change : events.values()) {
+        currentPeople += change;
+        if (currentPeople > C) {
+            return "No";
+        }
+    }
+
+    return "Yes";
+}
+}
