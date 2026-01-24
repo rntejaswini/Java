@@ -1,0 +1,86 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    public static int lilysHomework(java.util.List<Integer> arr) {
+        int ascSwaps = countSwaps(arr, true);
+        int descSwaps = countSwaps(arr, false);
+        return Math.min(ascSwaps, descSwaps);
+    }
+
+    private static int countSwaps(java.util.List<Integer> arr, boolean ascending) {
+        int n = arr.size();
+        int swaps = 0;
+
+        int[] original = new int[n];
+        for (int i = 0; i < n; i++) {
+            original[i] = arr.get(i);
+        }
+
+        int[] sorted = original.clone();
+        java.util.Arrays.sort(sorted);
+
+        if (!ascending) {
+            for (int i = 0; i < n / 2; i++) {
+                int temp = sorted[i];
+                sorted[i] = sorted[n - i - 1];
+                sorted[n - i - 1] = temp;
+            }
+        }
+
+        java.util.Map<Integer, Integer> indexMap = new java.util.HashMap<>();
+        for (int i = 0; i < n; i++) {
+            indexMap.put(original[i], i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (original[i] != sorted[i]) {
+                swaps++;
+
+                int correctValue = sorted[i];
+                int correctIndex = indexMap.get(correctValue);
+
+                indexMap.put(original[i], correctIndex);
+                indexMap.put(correctValue, i);
+
+                int temp = original[i];
+                original[i] = original[correctIndex];
+                original[correctIndex] = temp;
+            }
+        }
+
+        return swaps;
+    }
+}
+
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<Integer> arr = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+            .map(Integer::parseInt)
+            .collect(toList());
+
+        int result = Result.lilysHomework(arr);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
