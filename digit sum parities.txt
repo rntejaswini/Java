@@ -1,0 +1,37 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechef
+{
+    // Function to calculate digit sum
+    static int digitSum(long n) {
+        int sum = 0;
+        while (n > 0) {
+            sum += n % 10;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+
+        while (T-- > 0) {
+            long N = sc.nextLong();
+
+            int sumN = digitSum(N);
+
+            // Check N+1
+            if ((digitSum(N + 1) % 2) != (sumN % 2)) {
+                System.out.println(N + 1);
+            } else {
+                // Otherwise N+2 will always work
+                System.out.println(N + 2);
+            }
+        }
+        sc.close();
+    }
+}
