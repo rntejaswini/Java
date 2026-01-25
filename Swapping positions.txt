@@ -1,0 +1,81 @@
+import java.util.*;
+
+class TestClass {
+
+    static int countMismatch(char[] s, char[] t) {
+        int cnt = 0;
+        for (int i = 0; i < s.length; i++) {
+            if (s[i] != t[i]) cnt++;
+        }
+        return cnt;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+
+        while (T-- > 0) {
+            int N = sc.nextInt();
+            char[] S = sc.next().toCharArray();
+            char[] Tstr = sc.next().toCharArray();
+
+            List<Integer> diff = new ArrayList<>();
+            for (int i = 0; i < N; i++) {
+                if (S[i] != Tstr[i]) diff.add(i);
+            }
+
+            int d = diff.size();
+
+            if (d <= 1) {
+                System.out.println("YES");
+                continue;
+            }
+
+            if (d >= 4) {
+                System.out.println("NO");
+                continue;
+            }
+
+            boolean ok = false;
+
+            // try all swap combinations among mismatch positions
+            for (int i = 0; i < d && !ok; i++) {
+                for (int j = i + 1; j < d && !ok; j++) {
+                    int a = diff.get(i);
+                    int b = diff.get(j);
+
+                    // swap in S
+                    char tmp = S[a];
+                    S[a] = S[b];
+                    S[b] = tmp;
+                    if (countMismatch(S, Tstr) <= 1) ok = true;
+                    tmp = S[a]; S[a] = S[b]; S[b] = tmp;
+
+                    // swap in T
+                    tmp = Tstr[a];
+                    Tstr[a] = Tstr[b];
+                    Tstr[b] = tmp;
+                    if (countMismatch(S, Tstr) <= 1) ok = true;
+                    tmp = Tstr[a]; Tstr[a] = Tstr[b]; Tstr[b] = tmp;
+
+                    // swap S[a] with T[b]
+                    tmp = S[a];
+                    S[a] = Tstr[b];
+                    Tstr[b] = tmp;
+                    if (countMismatch(S, Tstr) <= 1) ok = true;
+                    tmp = S[a]; S[a] = Tstr[b]; Tstr[b] = tmp;
+
+                    // swap S[b] with T[a]
+                    tmp = S[b];
+                    S[b] = Tstr[a];
+                    Tstr[a] = tmp;
+                    if (countMismatch(S, Tstr) <= 1) ok = true;
+                    tmp = S[b]; S[b] = Tstr[a]; Tstr[a] = tmp;
+                }
+            }
+
+            System.out.println(ok ? "YES" : "NO");
+        }
+        sc.close();
+    }
+}
