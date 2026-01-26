@@ -1,0 +1,37 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+
+        while (T-- > 0) {
+            long N = sc.nextLong();
+            long A = sc.nextLong();
+            long B = sc.nextLong();
+
+            // First move check
+            if (A >= N) {
+                System.out.println(1);
+                continue;
+            }
+
+            long net = A - B;
+
+            // Impossible case
+            if (net <= 0) {
+                System.out.println(-1);
+                continue;
+            }
+
+            // Calculate minimum pairs needed
+            long remaining = N - A;
+            long k = (remaining + net - 1) / net; // ceil division
+
+            long moves = 2 * k + 1;
+            System.out.println(moves);
+        }
+
+        sc.close();
+    }
+}
