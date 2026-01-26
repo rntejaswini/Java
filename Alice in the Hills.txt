@@ -1,0 +1,70 @@
+import java.io.*;
+import java.util.*;
+
+public class TestClass {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] first = br.readLine().trim().split(" ");
+        int M = Integer.parseInt(first[0]);
+        int N = Integer.parseInt(first[1]);
+
+        int[][] a = new int[M][N];
+        for (int i = 0; i < M; i++) {
+            String[] row = br.readLine().trim().split(" ");
+            for (int j = 0; j < N; j++) {
+                a[i][j] = Integer.parseInt(row[j]);
+            }
+        }
+
+        System.out.println(solve(a));
+    }
+
+    static int solve(int[][] a) {
+        int R = a.length;
+        int C = a[0].length;
+
+        List<int[]> cells = new ArrayList<>();
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                cells.add(new int[]{a[i][j], i, j});
+            }
+        }
+
+        // Sort by height (ascending)
+        cells.sort(Comparator.comparingInt(x -> x[0]));
+
+        int[][] dp = new int[R][C];
+
+        TreeMap<Integer, Integer>[] rowMap = new TreeMap[R];
+        TreeMap<Integer, Integer>[] colMap = new TreeMap[C];
+
+        for (int i = 0; i < R; i++) rowMap[i] = new TreeMap<>();
+        for (int j = 0; j < C; j++) colMap[j] = new TreeMap<>();
+
+        int ans = 0;
+
+        for (int[] cell : cells) {
+            int h = cell[0];
+            int r = cell[1];
+            int c = cell[2];
+
+            int best = 0;
+
+            Map.Entry<Integer, Integer> re = rowMap[r].floorEntry(h);
+            if (re != null) best = Math.max(best, re.getValue());
+
+            Map.Entry<Integer, Integer> ce = colMap[c].floorEntry(h);
+            if (ce != null) best = Math.max(best, ce.getValue());
+
+            dp[r][c] = best + 1;
+            ans = Math.max(ans, dp[r][c]);
+
+            rowMap[r].put(h, Math.max(rowMap[r].getOrDefault(h, 0), dp[r][c]));
+            colMap[c].put(h, Math.max(colMap[c].getOrDefault(h, 0), dp[r][c]));
+        }
+
+        return ans;
+    }
+}
