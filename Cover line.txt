@@ -1,0 +1,82 @@
+import java.io.*;
+import java.util.*;
+class TestClass {
+    static class Segment {
+        int l, r, w;
+        Segment(int l, int r, int w) {
+            this.l = l;
+            this.r = r;
+            this.w = w;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine().trim());
+        int M = Integer.parseInt(br.readLine().trim());
+
+        Segment[] segs = new Segment[M];
+        int[] weights = new int[M];
+
+        for (int i = 0; i < M; i++) {
+            String[] s = br.readLine().trim().split(" ");
+            int l = Integer.parseInt(s[0]);
+            int r = Integer.parseInt(s[1]);
+            int w = Integer.parseInt(s[2]);
+            segs[i] = new Segment(l, r, w);
+            weights[i] = w;
+        }
+
+        Arrays.sort(weights);
+
+        int lo = 0, hi = M - 1;
+        int ans = -1;
+
+        while (lo <= hi) {
+            int mid = (lo + hi) / 2;
+            int maxW = weights[mid];
+
+            if (canCover(N, segs, maxW)) {
+                ans = maxW;
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+
+        System.out.println(ans);
+    }
+
+    static boolean canCover(int N, Segment[] segs, int maxW) {
+        List<Segment> valid = new ArrayList<>();
+
+        for (Segment s : segs) {
+            if (s.w <= maxW) {
+                valid.add(s);
+            }
+        }
+
+        valid.sort((a, b) -> a.l - b.l);
+
+        int coveredTill = 1;
+        int i = 0;
+
+        while (coveredTill <= N) {
+            int farthest = coveredTill - 1;
+
+            while (i < valid.size() && valid.get(i).l <= coveredTill) {
+                farthest = Math.max(farthest, valid.get(i).r);
+                i++;
+            }
+
+            if (farthest < coveredTill) {
+                return false; // gap found
+            }
+
+            coveredTill = farthest + 1;
+        }
+
+        return true;
+    }
+}
