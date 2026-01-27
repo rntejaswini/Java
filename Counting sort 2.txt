@@ -1,0 +1,34 @@
+;
+; Complete the 'countingSort' function below.
+;
+; The function is expected to return an INTEGER_ARRAY.
+; The function accepts INTEGER_ARRAY arr as parameter.
+;
+
+(defn countingSort [arr]
+  (let [freq (vec (repeat 100 0))]
+    (loop [i 0
+           f freq]
+      (if (= i (count arr))
+        ;; when all counted, build sorted array
+        (loop [idx 0
+               result []]
+          (if (= idx 100)
+            result
+            (let [count (f idx)]
+              (recur (inc idx)
+                     (into result (repeat count idx))))))
+        ;; counting step
+        (recur (inc i)
+               (assoc f (arr i) (inc (f (arr i)))))))))
+
+(def fptr (get (System/getenv) "OUTPUT_PATH"))
+
+(def n (Integer/parseInt (clojure.string/trim (read-line))))
+
+(def arr (vec (map #(Integer/parseInt %) (clojure.string/split (clojure.string/trimr (read-line)) #" "))))
+
+(def result (countingSort arr))
+
+(spit fptr (clojure.string/join " " result) :append true)
+(spit fptr "\n" :append true)
