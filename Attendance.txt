@@ -1,0 +1,86 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    static int toSeconds(String t) {
+        String[] p = t.split(":");
+        return Integer.parseInt(p[0]) * 3600
+             + Integer.parseInt(p[1]) * 60
+             + Integer.parseInt(p[2]);
+    }
+
+    static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine().trim());
+        String[] time = br.readLine().trim().split(" ");
+
+        int startClass = toSeconds(time[0]);
+        int endClass = toSeconds(time[1]);
+
+        int MAX = 86400;
+        int[] diff = new int[MAX + 2];
+        boolean[] present1 = new boolean[MAX + 2];
+
+        for (int i = 0; i < N; i++) {
+            String[] line = br.readLine().trim().split(" ");
+            int idx = 0;
+
+            int sid = Integer.parseInt(line[idx++]);
+            int m = Integer.parseInt(line[idx++]);
+
+            for (int j = 0; j < m; j++) {
+                int st = toSeconds(line[idx++]);
+                int en = toSeconds(line[idx++]);
+
+                diff[st] += 1;
+                diff[en] -= 1;
+
+                if (sid == 1) {
+                    for (int t = st; t < en; t++) {
+                        present1[t] = true;
+                    }
+                }
+            }
+        }
+
+        int minCount = Integer.MAX_VALUE;
+        int curr = 0;
+
+        // Find minimum students
+        for (int t = 0; t < MAX; t++) {
+            curr += diff[t];
+            if (t >= startClass && t < endClass) {
+                minCount = Math.min(minCount, curr);
+            }
+        }
+
+        long totalMinSeconds = 0;
+        long goodSeconds = 0;
+        curr = 0;
+
+        // Count probabilities
+        for (int t = 0; t < MAX; t++) {
+            curr += diff[t];
+            if (t >= startClass && t < endClass && curr == minCount) {
+                totalMinSeconds++;
+                if (present1[t]) {
+                    goodSeconds++;
+                }
+            }
+        }
+
+        if (goodSeconds == 0) {
+            System.out.println(0);
+            return;
+        }
+
+        long g = gcd(goodSeconds, totalMinSeconds);
+        System.out.println((goodSeconds / g) + "/" + (totalMinSeconds / g));
+    }
+}
