@@ -1,0 +1,33 @@
+import java.io.*;
+import java.util.*;
+
+public class TestClass {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String T = br.readLine();
+        String S = br.readLine();
+
+        System.out.println(make_equal(T, S) ? "YES" : "NO");
+    }
+
+    static boolean make_equal(String T, String S) {
+        int[] freq = new int[26];
+
+        // Count characters in both strings
+        for (char c : T.toCharArray()) {
+            freq[c - 'a']++;
+        }
+        for (char c : S.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        // Each character must have even total count
+        for (int count : freq) {
+            if (count % 2 != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
