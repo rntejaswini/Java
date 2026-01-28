@@ -1,0 +1,79 @@
+import java.io.*;
+import java.util.*;
+
+class Result {
+
+    /*
+     * Complete the 'icecreamParlor' function below.
+     *
+     * The function is expected to return an INTEGER_ARRAY.
+     * The function accepts following parameters:
+     *  1. INTEGER m
+     *  2. INTEGER_ARRAY arr
+     */
+    public static List<Integer> icecreamParlor(int m, List<Integer> arr) {
+        // Map from cost to its index (1-based)
+        Map<Integer, Integer> map = new HashMap<>();
+        List<Integer> result = new ArrayList<>();
+
+        for (int i = 0; i < arr.size(); i++) {
+            int cost = arr.get(i);
+            int complement = m - cost;
+
+            if (map.containsKey(complement)) {
+                // Found the pair
+                int first = map.get(complement);
+                int second = i + 1; // convert to 1-based index
+                result.add(Math.min(first, second));
+                result.add(Math.max(first, second));
+                break; // unique solution guaranteed
+            }
+
+            // Only store first occurrence of a cost
+            if (!map.containsKey(cost)) {
+                map.put(cost, i + 1); // 1-based index
+            }
+        }
+
+        return result;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int t = Integer.parseInt(bufferedReader.readLine().trim());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            int m = Integer.parseInt(bufferedReader.readLine().trim());
+
+            int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+            String[] arrTemp = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+            List<Integer> arr = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                int arrItem = Integer.parseInt(arrTemp[i]);
+                arr.add(arrItem);
+            }
+
+            List<Integer> result = Result.icecreamParlor(m, arr);
+
+            for (int i = 0; i < result.size(); i++) {
+                bufferedWriter.write(String.valueOf(result.get(i)));
+
+                if (i != result.size() - 1) {
+                    bufferedWriter.write(" ");
+                }
+            }
+
+            bufferedWriter.newLine();
+        }
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
