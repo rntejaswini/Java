@@ -1,0 +1,103 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    static class Flight {
+        String to;
+        int cost;
+
+        Flight(String to, int cost) {
+            this.to = to;
+            this.cost = cost;
+        }
+    }
+
+    static class Path implements Comparable<Path> {
+        List<String> cities;
+        int totalCost;
+
+        Path(List<String> cities, int totalCost) {
+            this.cities = new ArrayList<>(cities);
+            this.totalCost = totalCost;
+        }
+
+        @Override
+        public int compareTo(Path o) {
+            // 1. Sort by cost
+            if (this.totalCost != o.totalCost) return this.totalCost - o.totalCost;
+            // 2. Sort by number of connections (cities.size)
+            if (this.cities.size() != o.cities.size()) return this.cities.size() - o.cities.size();
+            // 3. Alphabetical comparison of full path string
+            String s1 = String.join(" ", this.cities);
+            String s2 = String.join(" ", o.cities);
+            return s1.compareTo(s2);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (String c : cities) sb.append(c).append(" ");
+            sb.append(totalCost);
+            return sb.toString();
+        }
+    }
+
+    static Map<String, List<Flight>> graph = new HashMap<>();
+    static List<Path> allPaths = new ArrayList<>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] firstLine = br.readLine().trim().split("\\s+");
+        String src = firstLine[0];
+        String dest = firstLine[1];
+
+        graph.clear();
+        allPaths.clear();
+
+        String line;
+        while ((line = br.readLine()) != null && !line.trim().isEmpty()) {
+            String[] parts = line.trim().split("\\s+");
+            String from = parts[0];
+            String to = parts[1];
+            int cost = Integer.parseInt(parts[2]);
+
+            graph.putIfAbsent(from, new ArrayList<>());
+            graph.get(from).add(new Flight(to, cost));
+        }
+
+        // DFS to find all paths
+        Set<String> visited = new HashSet<>();
+        List<String> path = new ArrayList<>();
+        path.add(src);
+        dfs(src, dest, 0, path, visited);
+
+        if (allPaths.isEmpty()) {
+            System.out.println("No Flights");
+        } else {
+            Collections.sort(allPaths);
+            for (Path p : allPaths) {
+                System.out.println(p);
+            }
+        }
+    }
+
+    static void dfs(String current, String dest, int costSoFar, List<String> path, Set<String> visited) {
+        if (current.equals(dest)) {
+            allPaths.add(new Path(path, costSoFar));
+            return;
+        }
+
+        visited.add(current);
+        List<Flight> flights = graph.getOrDefault(current, new ArrayList<>());
+        for (Flight f : flights) {
+            if (!visited.contains(f.to)) {
+                path.add(f.to);
+                dfs(f.to, dest, costSoFar + f.cost, path, visited);
+                path.remove(path.size() - 1);
+            }
+        }
+        visited.remove(current);
+    }
+}
