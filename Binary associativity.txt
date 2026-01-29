@@ -1,0 +1,42 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        int T = sc.nextInt();  // number of test cases
+
+        while (T-- > 0) {
+            int[][] op = new int[2][2];
+
+            // Read truth table
+            op[0][0] = sc.nextInt();
+            op[0][1] = sc.nextInt();
+            op[1][0] = sc.nextInt();
+            op[1][1] = sc.nextInt();
+
+            boolean associative = true;
+
+            // Check associativity for all a, b, c in {0,1}
+            for (int a = 0; a <= 1; a++) {
+                for (int b = 0; b <= 1; b++) {
+                    for (int c = 0; c <= 1; c++) {
+                        int left = op[op[a][b]][c];
+                        int right = op[a][op[b][c]];
+
+                        if (left != right) {
+                            associative = false;
+                            break;
+                        }
+                    }
+                    if (!associative) break;
+                }
+                if (!associative) break;
+            }
+
+            System.out.println(associative ? "Yes" : "No");
+        }
+
+        sc.close();
+    }
+}
