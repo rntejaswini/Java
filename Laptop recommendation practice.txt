@@ -1,0 +1,40 @@
+import java.util.*;
+
+class Codechef {
+    public static void main (String[] args) throws java.lang.Exception {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt(); // number of test cases
+
+        while (T-- > 0) {
+            int N = sc.nextInt(); // number of friends
+            int[] count = new int[11]; // counts for laptops 1 to 10
+
+            for (int i = 0; i < N; i++) {
+                int laptop = sc.nextInt();
+                count[laptop]++;
+            }
+
+            int maxCount = 0;
+            int laptopNumber = 0;
+            boolean confused = false;
+
+            for (int i = 1; i <= 10; i++) {
+                if (count[i] > maxCount) {
+                    maxCount = count[i];
+                    laptopNumber = i;
+                    confused = false; // reset confusion
+                } else if (count[i] == maxCount && maxCount != 0) {
+                    confused = true; // multiple laptops have max recommendations
+                }
+            }
+
+            if (confused) {
+                System.out.println("CONFUSED");
+            } else {
+                System.out.println(laptopNumber);
+            }
+        }
+
+        sc.close();
+    }
+}
