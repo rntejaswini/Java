@@ -1,0 +1,45 @@
+import java.util.*;
+
+class Codechef {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+
+        while (T-- > 0) {
+            int N = sc.nextInt();
+            int[] fingers = new int[N];
+            int[] glove = new int[N];
+
+            for (int i = 0; i < N; i++) {
+                fingers[i] = sc.nextInt();
+            }
+            for (int i = 0; i < N; i++) {
+                glove[i] = sc.nextInt();
+            }
+
+            boolean canFront = true;
+            boolean canBack = true;
+
+            for (int i = 0; i < N; i++) {
+                if (fingers[i] > glove[i]) {
+                    canFront = false;
+                }
+                if (fingers[i] > glove[N - 1 - i]) {
+                    canBack = false;
+                }
+            }
+
+            if (canFront && canBack) {
+                System.out.println("both");
+            } else if (canFront) {
+                System.out.println("front");
+            } else if (canBack) {
+                System.out.println("back");
+            } else {
+                System.out.println("none");
+            }
+        }
+
+        sc.close();
+    }
+}
