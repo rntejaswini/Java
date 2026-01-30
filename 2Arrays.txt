@@ -1,0 +1,70 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+
+    static long nCr(long n, long r) {
+        if (r > n) return 0;
+        r = Math.min(r, n - r);
+        long res = 1;
+        for (int i = 1; i <= r; i++) {
+            res = res * (n - r + i) / i;
+        }
+        return res;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(br.readLine().trim());
+
+        String[] aStr = br.readLine().split(" ");
+        String[] bStr = br.readLine().split(" ");
+
+        long sumA = 0, sumB = 0;
+        int x = 0, y = 0;
+
+        for (int i = 0; i < n; i++) {
+            int v = Integer.parseInt(aStr[i]);
+            if (v == -1) x++;
+            else sumA += v;
+        }
+
+        for (int i = 0; i < n; i++) {
+            int v = Integer.parseInt(bStr[i]);
+            if (v == -1) y++;
+            else sumB += v;
+        }
+
+        // Case 1: no -1
+        if (x == 0 && y == 0) {
+            System.out.println(sumA == sumB ? 1 : 0);
+            return;
+        }
+
+        // Case 2: both have -1
+        if (x > 0 && y > 0) {
+            System.out.println("Infinite");
+            return;
+        }
+
+        // Case 3: only A has -1
+        if (x > 0) {
+            long SA = sumB - sumA;
+            if (SA < 0) {
+                System.out.println(0);
+            } else {
+                System.out.println(nCr(SA + x - 1, x - 1));
+            }
+            return;
+        }
+
+        // Case 4: only B has -1
+        long SB = sumA - sumB;
+        if (SB < 0) {
+            System.out.println(0);
+        } else {
+            System.out.println(nCr(SB + y - 1, y - 1));
+        }
+    }
+}
