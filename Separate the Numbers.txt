@@ -1,0 +1,63 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+class Result {
+
+    /*
+     * Complete the 'separateNumbers' function below.
+     *
+     * The function accepts STRING s as parameter.
+     */
+
+    public static void separateNumbers(String s) {
+        int n = s.length();
+
+        // A beautiful string must have at least 2 numbers
+        for (int len = 1; len <= n / 2; len++) {
+
+            // First number
+            if (s.charAt(0) == '0') {
+                break; // leading zero not allowed
+            }
+
+            long first = Long.parseLong(s.substring(0, len));
+            long next = first + 1;
+
+            StringBuilder sequence = new StringBuilder();
+            sequence.append(first);
+
+            while (sequence.length() < n) {
+                sequence.append(next);
+                next++;
+            }
+
+            if (sequence.toString().equals(s)) {
+                System.out.println("YES " + first);
+                return;
+            }
+        }
+
+        System.out.println("NO");
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        int q = Integer.parseInt(bufferedReader.readLine().trim());
+
+        for (int qItr = 0; qItr < q; qItr++) {
+            String s = bufferedReader.readLine();
+
+            Result.separateNumbers(s);
+        }
+
+        bufferedReader.close();
+    }
+}
