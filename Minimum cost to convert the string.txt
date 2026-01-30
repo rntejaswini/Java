@@ -1,0 +1,97 @@
+import java.util.*;
+
+public class Solution {
+    private static final long INF = Long.MAX_VALUE / 2;
+
+    // Trie Node
+    static class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        List<Integer> ids = new ArrayList<>(); // stores original string ids ending here
+    }
+
+    public long minimumCost(String source, String target, String[] original, String[] changed, int[] cost) {
+        int n = source.length();
+        int m = original.length;
+
+        // Step 1: Map unique strings to IDs
+        Map<String, Integer> strToId = new HashMap<>();
+        List<String> idToStr = new ArrayList<>();
+        for (String s : original) if (!strToId.containsKey(s)) { strToId.put(s, idToStr.size()); idToStr.add(s); }
+        for (String s : changed) if (!strToId.containsKey(s)) { strToId.put(s, idToStr.size()); idToStr.add(s); }
+
+        int k = idToStr.size();
+        long[][] dist = new long[k][k];
+        for (int i = 0; i < k; i++) Arrays.fill(dist[i], INF);
+        for (int i = 0; i < k; i++) dist[i][i] = 0;
+
+        // Step 2: Build graph for conversions
+        for (int i = 0; i < m; i++) {
+            int u = strToId.get(original[i]);
+            int v = strToId.get(changed[i]);
+            dist[u][v] = Math.min(dist[u][v], cost[i]);
+        }
+
+        // Step 3: Floyd-Warshall for all-pairs shortest path
+        for (int h = 0; h < k; h++)
+            for (int i = 0; i < k; i++)
+                if (dist[i][h] != INF)
+                    for (int j = 0; j < k; j++)
+                        if (dist[h][j] != INF)
+                            dist[i][j] = Math.min(dist[i][j], dist[i][h] + dist[h][j]);
+
+        // Step 4: Build Trie for all original strings
+        TrieNode root = new TrieNode();
+        for (int i = 0; i < original.length; i++) {
+            String s = original[i];
+            TrieNode node = root;
+            for (char c : s.toCharArray()) {
+                node = node.children.computeIfAbsent(c, x -> new TrieNode());
+            }
+            node.ids.add(strToId.get(s)); // store original string id
+        }
+
+        // Step 5: DP
+        long[] dp = new long[n + 1];
+        Arrays.fill(dp, INF);
+        dp[n] = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            // Option 1: no change if characters already match
+            if (source.charAt(i) == target.charAt(i)) dp[i] = Math.min(dp[i], dp[i + 1]);
+
+            // Option 2: try all matching original strings using Trie
+            TrieNode node = root;
+            for (int j = i; j < n; j++) {
+                char c = source.charAt(j);
+                if (!node.children.containsKey(c)) break;
+                node = node.children.get(c);
+
+                for (int origId : node.ids) {
+                    String changedStr = idToStr.get(origId);
+                    // check all possible changed strings from Floyd-Warshall
+                    for (int v = 0; v < k; v++) {
+                        if (dist[origId][v] < INF) {
+                            String tgtStr = idToStr.get(v);
+                            if (j + 1 - i == tgtStr.length() && target.substring(i, j + 1).equals(tgtStr)) {
+                                dp[i] = Math.min(dp[i], dist[origId][v] + dp[j + 1]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return dp[0] >= INF ? -1 : dp[0];
+    }
+
+    // Example main for testing
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        String source = "abcd";
+        String target = "acbe";
+        String[] original = {"a","b","c","c","e","d"};
+        String[] changed = {"b","c","b","e","b","e"};
+        int[] cost = {2,5,5,1,2,20};
+        System.out.println(sol.minimumCost(source, target, original, changed, cost)); // 28
+    }
+}
