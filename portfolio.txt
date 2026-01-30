@@ -1,0 +1,611 @@
+
+export default function About() {
+  return (
+<section id="about" className="bg-white dark:bg-gray-900 py-20 px-6">
+
+
+      <div className="max-w-4xl mx-auto px-6 bg-white dark:bg-gray-90 rounded-xl p-8 p-8 shadow-lg">
+
+        <h1 className="text-3xl font-bold mb-4">About Me</h1>
+        <p className="text-gray-400 leading-relaxed">
+      
+
+
+      </p>
+      
+      
+
+        {/* Personal Details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+            <h2 className="font-semibold text-lg">📧 Email</h2>
+            <p>rntejaswini03@gmail.com</p>
+          </div>
+
+      <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+            <h2 className="font-semibold text-lg">📍 Address</h2>
+            <p>Ramachandrapura, Tiptur Karnataka</p>
+          </div>
+<div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+            <h2 className="font-semibold text-lg">🏫 College</h2>
+            <p>Kalpatarau Institute of Technology, Tiptur</p>
+          </div>
+
+        <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+            <h2 className="font-semibold text-lg">🧑‍🎓 Branch</h2>
+            <p>Information Science & Engineering</p>
+          </div>
+
+    <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+            <h2 className="font-semibold text-lg">📊 CGPA</h2>
+            <p>9.17 / 10</p>
+          </div>
+
+ <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+            <h2 className="font-semibold text-lg">🎯 Hobbies</h2>
+            <p>Reading Books,Cooking and Coding</p>
+          </div>
+        </div>
+  
+
+      </div>
+    </section>
+  );
+}import { useState } from "react";
+
+// Auto-import ALL images from assets folder
+const images = import.meta.glob("../assets/*.{png,jpg,jpeg}", {
+  eager: true,
+});
+
+export default function Certificates() {
+  const [selected, setSelected] = useState(null);
+
+  // Convert imported images into array
+  const certificates = Object.values(images).map((img) => {
+    const filePath = img.default;
+    const fileName = filePath
+      .split("/")
+      .pop()
+      .replace(/\.(png|jpg|jpeg)/i, "")
+      .replace(/%20/g, " ")
+      .replace(/[-_]/g, " ")
+      .trim();
+
+    return {
+      image: filePath,
+      title: fileName,
+    };
+  });
+
+  // Download function
+  const downloadCertificate = (image, title) => {
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = `${title}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+  <section id="certificates" className="py-16 bg-white dark:bg-gray-950">
+
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Heading */}
+        <h2 className="text-3xl font-bold text-center text-white mb-10">
+          Certifications
+        </h2>
+
+        {/* Certificates Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {certificates.map((cert, index) => (
+            <div
+              key={index}
+              onClick={() => setSelected(cert)}
+              className="bg-gray-900 rounded-xl overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-transform"
+            >
+              <img
+                src={cert.image}
+                alt={cert.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-3 text-center">
+                <p className="text-sm font-semibold text-white">
+                  {cert.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Modal */}
+        {selected && (
+          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+            <div className="relative max-w-3xl w-full p-4">
+
+              {/* Close Button */}
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute top-2 right-2 text-white text-2xl"
+              >
+                ✕
+              </button>
+
+              {/* Certificate Image */}
+              <img
+                src={selected.image}
+                alt={selected.title}
+                className="w-full rounded-lg"
+              />
+
+              {/* Title */}
+              <p className="text-center text-white mt-4 font-semibold">
+                {selected.title}
+              </p>
+
+              {/* Download Button */}
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={() =>
+                    downloadCertificate(selected.image, selected.title)
+                  }
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+                >
+                  ⬇️ Download Certificate
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { SiLeetcode, SiCodechef, SiHackerearth, SiHackerrank } from "react-icons/si";
+
+export default function Contact() {
+  return (
+    <section id="contact" className="bg-white dark:bg-gray-900 py-20 px-6 text-center">
+      <h2 className="text-3xl font-bold mb-6">Connect With Me</h2>
+
+      <div className="flex flex-wrap justify-center gap-6 text-black-500">
+        <a href="https://linkedin.com/in/tejaswini-rn" target="_blank" rel="noreferrer">
+          <FaLinkedin size={28} />
+        </a>
+
+        <a href="https://github.com/rntejaswini" target="_blank" rel="noreferrer">
+          <FaGithub size={28} />
+        </a>
+
+        <a href="https://leetcode.com/u/25lhI0ZXuQ/" target="_blank" rel="noreferrer">
+          <SiLeetcode size={28} />
+        </a>
+
+        <a href="https://www.codechef.com/dashboard" target="_blank" rel="noreferrer">
+          <SiCodechef size={28} />
+        </a>
+
+        <a href="https://www.hackerearth.com/@rntejaswini03/" target="_blank" rel="noreferrer">
+          <SiHackerearth size={28} />
+        </a>
+
+        <a href="https://www.hackerrank.com/profile/rntejaswini03" target="_blank" rel="noreferrer">
+          <SiHackerrank size={28} />
+        </a>
+      </div>
+    </section>
+  );
+}import profile from "../assets1/Tejaswini Photo 1.png";
+
+export default function Hero() {
+  return (
+    <section className="min-h-screen flex items-center justify-center px-6 bg-white dark:bg-gray-950">
+      <div className="text-center">
+        
+        <img
+          src={profile}
+          alt="Tejaswini RN"
+          className="w-60 h-60 mx-auto rounded-full border-4 border-brown-700 mb-9"
+        />
+
+        <h1 className="text-5xl font-bold text-gray-900 dark:text-white">
+          Tejaswini RN
+        </h1>
+
+        <p className="mt-3 text-xl text-gray-600 dark:text-gray-300 font-medium">
+          Web Developer | AI Enthusiast
+        </p>
+
+        <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-center leading-relaxed">
+          I am a motivated engineering student with strong interest in
+          Artificial Intelligence, Web Development, and real-world problem
+          solving. I have hands-on experience building AI-powered systems,
+          smart applications, and full-stack web solutions. I am actively
+          seeking opportunities to apply my skills in software development
+          and intelligent systems.
+        </p>
+      </div>
+    </section>
+  );
+}import { useEffect, useState } from "react";
+
+export default function Navbar() {
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  return (
+    <nav className="fixed w-full bg-black/80 backdrop-blur z-50">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 className="font-bold text-xl text-white">Tejaswini RN</h1>
+
+        <div className="flex items-center gap-6">
+          <a className="text-white" href="#about">About</a>
+          <a className="text-white" href="#skills">Skills</a>
+          <a className="text-white" href="#projects">Projects</a>
+          <a className="text-white" href="#contact">Contact</a>
+          <a className="text-white hover:text-blue-400" href="#resume">
+            Resume
+          </a>
+
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
+        </div>
+      </div>
+    </nav>
+  );
+}const projects = [
+  {
+    title: "Smart Task Planner",
+    desc: "A smart task management web application for students to organize academic and personal tasks with pending, overdue, and today’s task tracking.",
+    tech: "HTML, CSS, JavaScript",
+    github: "https://github.com/rntejaswini/Smart-Task-Planner",
+    demo: "https://www.linkedin.com/posts/tejaswini-rn_stemup-demoproject-smarttodomanager-activity-7388371358050742272-Ba2p?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD4O_iMBVuCOPwzjzShjrYqh2I4XLFM4Y2w",
+  },
+  {
+    title: "Smart Weather Forecast Dashboard",
+    desc: "A modern and responsive weather dashboard providing real-time weather updates and 5-day forecasts using the OpenWeatherMap API.",
+    tech: "HTML, CSS, JavaScript, OpenWeatherMap API",
+    github: "https://github.com/rntejaswini/Smart-Weather-Forecast-Dashboard",
+    demo: "https://www.linkedin.com/posts/tejaswini-rn_webdevelopment-frontenddevelopment-javascript-activity-7380761239217565696--i66?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD4O_iMBVuCOPwzjzShjrYqh2I4XLFM4Y2w",
+  },
+  {
+    title: "Student Attendance Manager",
+    desc: "A simple web-based attendance management system to mark daily attendance and view individual or full-class attendance reports.",
+    tech: "HTML, CSS, JavaScript",
+    github: "https://github.com/rntejaswini/Student-Attendance-Manager",
+    demo: "https://www.linkedin.com/posts/tejaswini-rn_stemup-webdevelopment-javascript-activity-7385130465961177088-qF49?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD4O_iMBVuCOPwzjzShjrYqh2I4XLFM4Y2w",
+  },
+  {
+    title: "Browser Object Model Explorer",
+    desc: "An interactive project demonstrating Browser Object Model concepts like window handling, browser information, timers, and user interactions.",
+    tech: "HTML, CSS, JavaScript",
+    github: "https://github.com/rntejaswini/Browser-Object-Model",
+    demo: "https://www.linkedin.com/posts/tejaswini-rn_stemup-webdevelopment-javascript-activity-7380564944355962881-v7w3?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD4O_iMBVuCOPwzjzShjrYqh2I4XLFM4Y2w",
+  },
+  {
+    title: "Smart Joke Dashboard",
+    desc: "A fun and dynamic web app that fetches real-time jokes using public APIs with a glowing neon UI and responsive design.",
+    tech: "HTML, CSS, JavaScript, Public Joke API",
+    github: "https://github.com/rntejaswini/Smart-Joke-Dashboard",
+    demo: "https://www.linkedin.com/posts/tejaswini-rn_stemup-webdevelopment-javascript-activity-7381123622075101184-a_tz?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD4O_iMBVuCOPwzjzShjrYqh2I4XLFM4Y2w",
+  },
+  {
+    title: "Nature Video Gallery",
+    desc: "A professional and responsive video gallery showcasing high-quality nature videos organized into multiple categories.",
+    tech: "HTML5, CSS Flexbox, JavaScript",
+    github: "https://github.com/rntejaswini/Nature-Vedio-Gallery",
+    demo: "https://github.com/rntejaswini/Nature-Vedio-Gallery",
+  },
+  {
+    title: "Restaurant Menu & Order App",
+    desc: "An interactive restaurant menu web application that allows users to browse food items and view an order summary dynamically.",
+    tech: "HTML, CSS, JavaScript",
+    github: "https://github.com/rntejaswini/Restaurant-s-Menu-List",
+    demo: "https://www.linkedin.com/posts/tejaswini-rn_stemup-webdevelopment-frontenddevelopment-activity-7385609823779905536-2qoa?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD4O_iMBVuCOPwzjzShjrYqh2I4XLFM4Y2w",
+  },
+  {
+    title: "Internship Application Tracker",
+    desc: "A web-based system that helps students explore internships, apply online, and track application progress efficiently.",
+    tech: "HTML, CSS, JavaScript",
+    github: "https://github.com/rntejaswini/Internship-Application-Tracker",
+    demo: "https://www.linkedin.com/posts/your-demo-link",
+  },
+  {
+    title: "AI-Powered Healthcare System for Early Disease Detection",
+    desc: "An AI-based healthcare platform that predicts diseases such as Diabetes, Heart Disease, and Parkinson’s using Machine Learning algorithms.",
+    tech: "Python, Machine Learning, Streamlit",
+    github:
+      "https://github.com/rntejaswini/AI-Powered-Healthcare-System-for-Early-Disease-Detection",
+    demo: "https://www.linkedin.com/posts/your-demo-link",
+  },
+  {
+    title: "YouTube Clone",
+    desc: "A YouTube-inspired web application that allows users to browse, search, and watch videos with a clean and responsive UI.",
+    tech: "HTML, CSS, JavaScript",
+    github: "https://github.com/rntejaswini/YouTube-Clone",
+    demo: "https://www.linkedin.com/posts/your-demo-link",
+  },
+];
+export default function Projects() {
+  return (
+    <section id="projects" className="max-w-6xl mx-auto py-20 px-6 bg-white dark:bg-gray-950">
+      <h2 className="text-3xl font-bold mb-10 text-gray-900 dark:text-white">
+        Projects
+      </h2>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {projects.map((p) => (
+          <div
+            key={p.title}
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {p.title}
+            </h3>
+
+            <p className="text-gray-600 dark:text-gray-300 mt-2">
+              {p.desc}
+            </p>
+
+            <p className="mt-3 text-sm text-blue-600 dark:text-blue-400">
+              Tech Stack: {p.tech}
+            </p>
+
+            <div className="flex gap-4 mt-6">
+              <a
+                href={p.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+              >
+                GitHub →
+              </a>
+
+              <a
+                href={p.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-600 dark:text-green-400 font-medium hover:underline"
+              >
+                Live Demo →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}export default function Research() {
+  return (
+    <section id="research" className="max-w-6xl mx-auto py-20 px-6 bg-white dark:bg-gray-950">
+
+      <h2 className="text-3xl font-bold mb-10 text-gray-900 dark:text-white">
+        Research Publication
+      </h2>
+
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          AI-Powered Healthcare System for Early Disease Detection
+        </h3>
+
+        <p className="text-gray-600 dark:text-gray-300 mt-3">
+          <strong>Author:</strong> Tejaswini R N
+        </p>
+
+        <p className="text-gray-600 dark:text-gray-300 mt-1">
+          <strong>Journal:</strong> International Journal of Innovative Research
+          in Technology (IJIRT)
+        </p>
+
+        <p className="text-gray-600 dark:text-gray-300 mt-1">
+          <strong>Publication Type:</strong> Final Year Engineering Project
+          Research Paper
+        </p>
+
+        <p className="text-gray-600 dark:text-gray-300 mt-1">
+          <strong>Domain:</strong> Artificial Intelligence, Machine Learning,
+          Healthcare
+        </p>
+
+        <p className="text-gray-700 dark:text-gray-300 mt-4 leading-relaxed">
+          This research presents an AI-powered healthcare platform designed for
+          early disease detection. The system uses Machine Learning algorithms
+          such as Random Forest and Support Vector Machine (SVM) to predict
+          diseases including Diabetes, Heart Disease, and Parkinson’s Disease.
+          The platform integrates additional healthcare features like doctor
+          appointment booking, medicine reminders, and emergency support,
+          enabling a comprehensive and user-friendly healthcare solution.
+        </p>
+
+        <div className="flex gap-6 mt-6">
+          <a
+            href="https://www.bing.com/ck/a?!&&p=0efe090ec86e2a5ae7854e668c09956d02da5d4d1e3946e8360b3595676814e0JmltdHM9MTc2OTQ3MjAwMA&ptn=3&ver=2&hsh=4&fclid=11e43ec8-4137-6f45-1326-2d09409a6e2b&psq=Tejaswini+R+N+Ai+poweed+helathcare+system+for+early+dissease+detection+ijirt&u=a1aHR0cHM6Ly9pamlydC5vcmcvcHVibGlzaGVkcGFwZXIvSUpJUlQxODc5MTVfUEFQRVIucGRm"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+          >
+            View Publication →
+          </a>
+
+          <a
+            href="https://github.com/rntejaswini/AI-Powered-Healthcare-System-for-Early-Disease-Detection"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-600 dark:text-green-400 font-medium hover:underline"
+          >
+            Project Repository →
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}export default function Resume() {
+  const pdfUrl = "/_Tejaswini _ R N _ Resume.pdf";
+
+  return (
+    <section id="resume" className="bg-white dark:bg-gray-900 py-16">
+      <div className="max-w-5xl mx-auto px-6 text-center">
+        <h2 className="text-3xl font-bold text-black dark:text-white mb-6">
+          Resume
+        </h2>
+
+        <p className="text-gray-500 dark:text-gray-300 mb-8">
+          You can view or download my resume below.
+        </p>
+
+        <div className="flex justify-center gap-4 mb-10">
+          {/* View Resume */}
+          <a
+            href={pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+      
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold"
+          >
+            View Resume
+          </a>
+
+          {/* Download Resume */}
+          <a
+            href={pdfUrl}
+            download="_Tejaswini _ R N _ Resume.pdf"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold"
+          >
+            ⬇️ Download Resume
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+export default function Skills() {
+  const skills = [
+    "HTML", "CSS", "JavaScript", "React",
+    "Python", "Java", "AI / ML",
+    "Data Visualization using Power BI", "Deep Learning", "Big-Data Analytics", "Information & Network Security", "DSA"
+  ];
+
+  return (
+<section id="skills" className="bg-white dark:bg-gray-900 py-20 px-6">
+
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6">Skills</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {skills.map(skill => (
+            <div key={skill} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+
+              {skill}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Skills from "./components/Skills";
+import Projects from "./components/Projects";
+import Research from "./components/Research";
+import Resume from "./components/Resume";
+import Certificates from "./components/Certificates";
+import Contact from "./components/Contact";
+
+export default function App() {
+  return (
+<div className="bg-white text-gray-900 dark:bg-gray-950 dark:text-white min-h-screen">
+
+
+      <Navbar />
+      <Hero />
+      <About />
+      <Skills />
+      <Projects />
+      <Research />
+      <Resume />
+      <Certificates />
+      <Contact />
+    </div>
+  );
+
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+const theme = localStorage.getItem("theme");
+if (theme === "dark") {
+  document.documentElement.classList.add("dark");
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+const theme = localStorage.getItem("theme");
+if (theme === "dark") {
+  document.documentElement.classList.add("dark");
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);this is my portfiilio [project i made ot aa static i can not edit agial if i want to edit my profile photo or edit any certificates add or delete information so i want to make it fully dunamic same roject but dynamicused supabase database which is sql based database give ho wcan i eidt my sttaic to dynamic full working portfolio u  iw ill give u snapshot of my folder structure also 
+
+
+
+
+
+
+
+
+
+
