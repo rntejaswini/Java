@@ -1,0 +1,21 @@
+static long getResult(int[] Arr) {
+    long totalSum = 0;
+    HashMap<Integer, Integer> freq = new HashMap<>();
+
+    // Calculate total sum and frequency
+    for (int val : Arr) {
+        totalSum += val;
+        freq.put(val, freq.getOrDefault(val, 0) + 1);
+    }
+
+    long minContribution = Long.MAX_VALUE;
+
+    // Find minimum value * frequency
+    for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+        long contribution = (long) entry.getKey() * entry.getValue();
+        minContribution = Math.min(minContribution, contribution);
+    }
+
+    // Maximum possible remaining sum
+    return totalSum - minContribution;
+}
