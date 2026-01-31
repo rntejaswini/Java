@@ -1,0 +1,53 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechef {
+    public static void main (String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N1 = Integer.parseInt(st.nextToken());
+        int N2 = Integer.parseInt(st.nextToken());
+        int N3 = Integer.parseInt(st.nextToken());
+
+        int[] A = new int[N1];
+        int[] B = new int[N2];
+        int[] C = new int[N3];
+
+        for (int i = 0; i < N1; i++) A[i] = Integer.parseInt(br.readLine().trim());
+        for (int i = 0; i < N2; i++) B[i] = Integer.parseInt(br.readLine().trim());
+        for (int i = 0; i < N3; i++) C[i] = Integer.parseInt(br.readLine().trim());
+
+        ArrayList<Integer> result = new ArrayList<>();
+
+        int i = 0, j = 0, k = 0;
+
+        while (i < N1 || j < N2 || k < N3) {
+
+            int x = Integer.MAX_VALUE;
+            if (i < N1) x = Math.min(x, A[i]);
+            if (j < N2) x = Math.min(x, B[j]);
+            if (k < N3) x = Math.min(x, C[k]);
+
+            int count = 0;
+
+            if (i < N1 && A[i] == x) { count++; i++; }
+            if (j < N2 && B[j] == x) { count++; j++; }
+            if (k < N3 && C[k] == x) { count++; k++; }
+
+            if (count >= 2) {
+                result.add(x);
+            }
+        }
+
+        // Output
+        StringBuilder sb = new StringBuilder();
+        sb.append(result.size()).append('\n');
+        for (int val : result) {
+            sb.append(val).append('\n');
+        }
+        System.out.print(sb.toString());
+    }
+}
