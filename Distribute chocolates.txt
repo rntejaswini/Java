@@ -1,0 +1,28 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            String[] parts = br.readLine().trim().split(" ");
+            long C = Long.parseLong(parts[0]); // chocolates
+            long N = Long.parseLong(parts[1]); // students
+
+            // Minimum chocolates needed to give at least 1 to everyone
+            long minRequired = N * (N + 1) / 2;
+
+            if (C < minRequired) {
+                // Distribution not possible
+                System.out.println(C);
+            } else {
+                long base = N * (N - 1) / 2;
+                long x = (C - base) / N;
+                long used = N * x + base;\
+                System.out.println(C - used);
+            }
+        }
+    }
+}
