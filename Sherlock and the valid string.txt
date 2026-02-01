@@ -1,0 +1,72 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+class Result {
+
+    public static String isValid(String s) {
+        int[] freq = new int[26];
+
+        // Count character frequencies
+        for (int i = 0; i < s.length(); i++) {
+            freq[s.charAt(i) - 'a']++;
+        }
+
+        // Count frequency of frequencies
+        Map<Integer, Integer> countMap = new HashMap<Integer, Integer>();
+        for (int f : freq) {
+            if (f > 0) {
+                if (!countMap.containsKey(f))
+                    countMap.put(f, 0);
+                countMap.put(f, countMap.get(f) + 1);
+            }
+        }
+
+        // Case 1: All frequencies same
+        if (countMap.size() == 1)
+            return "YES";
+
+        // Case 2: Exactly two frequencies
+        if (countMap.size() == 2) {
+            List<Integer> keys = new ArrayList<Integer>(countMap.keySet());
+            int f1 = keys.get(0);
+            int f2 = keys.get(1);
+
+            int c1 = countMap.get(f1);
+            int c2 = countMap.get(f2);
+
+            // One character occurs once
+            if ((f1 == 1 && c1 == 1) || (f2 == 1 && c2 == 1))
+                return "YES";
+
+            // Difference is 1 and higher freq occurs once
+            if (Math.abs(f1 - f2) == 1) {
+                if ((f1 > f2 && c1 == 1) || (f2 > f1 && c2 == 1))
+                    return "YES";
+            }
+        }
+
+        return "NO";
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String s = bufferedReader.readLine();
+
+        String result = Result.isValid(s);
+
+        bufferedWriter.write(result);
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
