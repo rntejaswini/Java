@@ -1,0 +1,27 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        int cost = sc.nextInt();        // initial ticket cost
+        int seats = sc.nextInt();       // total seats available
+        int threshold = sc.nextInt();   // threshold seats
+        int hikedCost = sc.nextInt();   // increased cost
+        int members = sc.nextInt();     // family members
+
+        int totalCost = 0;
+
+        for (int i = 0; i < members; i++) {
+            if (seats > threshold) {
+                totalCost += cost;
+            } else {
+                totalCost += hikedCost;
+            }
+            seats--; // one seat booked
+        }
+
+        System.out.println(totalCost);
+        sc.close();
+    }
+}
