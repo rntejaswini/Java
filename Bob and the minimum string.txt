@@ -1,0 +1,43 @@
+import java.io.*;
+import java.util.*;
+
+class TestClass {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        while (T-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            String s = br.readLine().trim();
+
+            // Step 1: compute minimum character to the right
+            char[] minRight = new char[n];
+            minRight[n - 1] = s.charAt(n - 1);
+
+            for (int i = n - 2; i >= 0; i--) {
+                minRight[i] = (char) Math.min(s.charAt(i), minRight[i + 1]);
+            }
+
+            // Stack for U
+            Deque<Character> stack = new ArrayDeque<>();
+            StringBuilder result = new StringBuilder();
+
+            // Step 2: process characters
+            for (int i = 0; i < n; i++) {
+                stack.push(s.charAt(i));
+
+                while (!stack.isEmpty() &&
+                      (i == n - 1 || stack.peek() <= minRight[i + 1])) {
+                    result.append(stack.pop());
+                }
+            }
+
+            // Step 3: empty remaining stack
+            while (!stack.isEmpty()) {
+                result.append(stack.pop());
+            }
+
+            System.out.println(result.toString());
+        }
+    }
+}
