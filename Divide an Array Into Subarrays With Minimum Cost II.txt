@@ -1,0 +1,81 @@
+import java.util.*;
+
+class Solution {
+
+    // Multiset implementation using TreeMap
+    static class MultiSet {
+        TreeMap<Long, Integer> map = new TreeMap<>();
+        long sum = 0;
+        int size = 0;
+
+        void add(long x) {
+            map.put(x, map.getOrDefault(x, 0) + 1);
+            sum += x;
+            size++;
+        }
+
+        void remove(long x) {
+            int cnt = map.get(x);
+            if (cnt == 1) map.remove(x);
+            else map.put(x, cnt - 1);
+            sum -= x;
+            size--;
+        }
+
+        long first() {
+            return map.firstKey();
+        }
+
+        long last() {
+            return map.lastKey();
+        }
+    }
+
+    public long minimumCost(int[] nums, int k, int dist) {
+        int n = nums.length;
+
+        MultiSet small = new MultiSet(); // holds smallest k-1 elements
+        MultiSet large = new MultiSet(); // holds remaining elements
+
+        // Initial window: [1 ... dist+1]
+        for (int i = 1; i <= dist + 1; i++) {
+            small.add(nums[i]);
+            if (small.size > k - 1) {
+                long move = small.last();
+                small.remove(move);
+                large.add(move);
+            }
+        }
+
+        long ans = nums[0] + small.sum;
+
+        // Slide the window
+        for (int i = dist + 2; i < n; i++) {
+            int out = i - (dist + 1);
+
+            // Remove outgoing element
+            if (small.map.containsKey((long) nums[out])) {
+                small.remove(nums[out]);
+                if (!large.map.isEmpty()) {
+                    long move = large.first();
+                    large.remove(move);
+                    small.add(move);
+                }
+            } else {
+                large.remove(nums[out]);
+            }
+
+            // Add incoming element
+            small.add(nums[i]);
+            if (small.size > k - 1) {
+                long move = small.last();
+                small.remove(move);
+                large.add(move);
+            }
+
+            ans = Math.min(ans, nums[0] + small.sum);
+        }
+
+        return ans;
+    }
+}
