@@ -1,0 +1,28 @@
+import java.util.*;
+import java.io.*;
+
+class Codechef
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+
+        StringBuilder out = new StringBuilder();
+
+        while(T-- > 0) {
+            String S = br.readLine().trim();
+            int sum = 0;
+
+            for(char c : S.toCharArray()) {
+                if(Character.isDigit(c)) {
+                    sum += c - '0';  // convert char digit to integer
+                }
+            }
+
+            out.append(sum).append("\n");
+        }
+
+        System.out.print(out);
+    }
+}
