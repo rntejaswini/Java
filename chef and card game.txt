@@ -1,0 +1,53 @@
+import java.util.*;
+import java.io.*;
+
+class Codechef
+{
+    // Function to compute sum of digits
+    static int sumOfDigits(int n) {
+        int sum = 0;
+        while(n > 0) {
+            sum += n % 10;
+            n /= 10;
+        }
+        return sum;
+    }
+    
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+        StringBuilder out = new StringBuilder();
+        
+        while(T-- > 0) {
+            int N = Integer.parseInt(br.readLine().trim());
+            int chefPoints = 0, mortyPoints = 0;
+            
+            for(int i = 0; i < N; i++) {
+                String[] line = br.readLine().trim().split(" ");
+                int A = Integer.parseInt(line[0]);
+                int B = Integer.parseInt(line[1]);
+                
+                int powerA = sumOfDigits(A);
+                int powerB = sumOfDigits(B);
+                
+                if(powerA > powerB) chefPoints++;
+                else if(powerB > powerA) mortyPoints++;
+                else {
+                    chefPoints++;
+                    mortyPoints++;
+                }
+            }
+            
+            if(chefPoints > mortyPoints) {
+                out.append("0 ").append(chefPoints).append("\n");
+            } else if(mortyPoints > chefPoints) {
+                out.append("1 ").append(mortyPoints).append("\n");
+            } else {
+                out.append("2 ").append(chefPoints).append("\n"); // draw, points same
+            }
+        }
+        
+        System.out.print(out);
+    }
+}
