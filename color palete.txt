@@ -1,0 +1,39 @@
+Looking at your code, I can extract the color palette used across your ProjectModal and Certificates components. Most of the colors are defined via Tailwind CSS classes or inline styles. Here's a breakdown:
+
+Primary Colors
+Purpose	Color / Tailwind Class	Hex Approx
+Main purple (headings, highlights)	text-purple-400	#A78BFA
+Secondary purple (small text in modal)	text-purple-300	#C4B5FD
+Buttons / links	text-purple-400 hover:underline	#A78BFA
+Background Colors
+Purpose	Color / Tailwind Class	Hex Approx
+Modal overlay	bg-black/80	rgba(0,0,0,0.8)
+Card / modal background	glass (likely a semi-transparent glassmorphism style)	Approx rgba(255, 255, 255, 0.05~0.15) with blur
+Certificates card background	glass	Same as above
+Text Colors
+Purpose	Color / Tailwind Class	Hex Approx
+Normal gray text	text-gray-300	#D1D5DB
+Modal/description text	text-gray-300	#D1D5DB
+Additional Notes
+
+Buttons have btn and btn-outline classes, which likely include purple borders or background in btn and transparent for btn-outline.
+
+bg-black/80 is used consistently for overlay modals to create a dark semi-transparent background.
+
+Glass elements (glass class) usually combine semi-transparent white with blur, giving a frosted glass effect.
+
+White/neutral text is used on top of dark/overlay backgrounds implicitly (text-white may be in glass styling).
+
+✅ Summary Palette
+
+Purple: #A78BFA (main), #C4B5FD (secondary)
+
+Gray: #D1D5DB (text)
+
+Black overlay: rgba(0,0,0,0.8)
+
+Glass background: semi-transparent white rgba(255,255,255,0.05~0.15)
+
+If you want, I can make a visual color palette chart of these exact colors so you can see them all together—it will be very handy for design consistency.
+
+Do you want me to do that?
