@@ -1,0 +1,23 @@
+import java.util.*;
+import java.io.*;
+
+class Codechef
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
+        StringBuilder out = new StringBuilder();
+
+        while(T-- > 0) {
+            String[] line = br.readLine().trim().split(" ");
+            long L = Long.parseLong(line[0]);
+            long K = Long.parseLong(line[1]);
+
+            long result = (L % K == 0) ? 0 : 1;
+            out.append(result).append("\n");
+        }
+
+        System.out.print(out);
+    }
+}
