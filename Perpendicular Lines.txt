@@ -1,0 +1,43 @@
+import java.util.*;
+
+class TestClass {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+
+        while (T-- > 0) {
+
+            long x1 = sc.nextLong();
+            long y1 = sc.nextLong();
+            long x2 = sc.nextLong();
+            long y2 = sc.nextLong();
+
+            long x3 = sc.nextLong();
+            long y3 = sc.nextLong();
+            long x4 = sc.nextLong();
+            long y4 = sc.nextLong();
+
+            // Check if any line is invalid
+            if ((x1 == x2 && y1 == y2) || (x3 == x4 && y3 == y4)) {
+                System.out.println("INVALID");
+                continue;
+            }
+
+            long dx1 = x2 - x1;
+            long dy1 = y2 - y1;
+            long dx2 = x4 - x3;
+            long dy2 = y4 - y3;
+
+            // Dot product
+            long dot = dx1 * dx2 + dy1 * dy2;
+
+            if (dot == 0) {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
+        }
+
+        sc.close();
+    }
+}
