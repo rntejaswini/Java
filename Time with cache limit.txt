@@ -1,0 +1,57 @@
+var TimeLimitedCache = function() {
+    this.cache = new Map();
+};
+
+/** 
+ * @param {number} key
+ * @param {number} value
+ * @param {number} duration
+ * @return {boolean}
+ */
+TimeLimitedCache.prototype.set = function(key, value, duration) {
+    const now = Date.now();
+    const expireAt = now + duration;
+    
+    const exists =
+        this.cache.has(key) && this.cache.get(key).expireAt > now;
+    
+    this.cache.set(key, { value, expireAt });
+    return exists;
+};
+
+/** 
+ * @param {number} key
+ * @return {number}
+ */
+TimeLimitedCache.prototype.get = function(key) {
+    const now = Date.now();
+    
+    if (!this.cache.has(key)) return -1;
+    
+    const { value, expireAt } = this.cache.get(key);
+    
+    if (expireAt <= now) {
+        this.cache.delete(key);
+        return -1;
+    }
+    
+    return value;
+};
+
+/** 
+ * @return {number}
+ */
+TimeLimitedCache.prototype.count = function() {
+    const now = Date.now();
+    let count = 0;
+    
+    for (const [key, { expireAt }] of this.cache) {
+        if (expireAt > now) {
+            count++;
+        } else {
+            this.cache.delete(key);
+        }
+    }
+    
+    return count;
+};
