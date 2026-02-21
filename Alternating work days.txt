@@ -1,0 +1,37 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechef
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        
+        while(T-- > 0) {
+            long A = sc.nextLong();
+            long B = sc.nextLong();
+            long P = sc.nextLong();
+            long Q = sc.nextLong();
+            
+            // Check divisibility
+            if(P % A != 0 || Q % B != 0) {
+                System.out.println("NO");
+                continue;
+            }
+            
+            long x = P / A;  // Alice work count
+            long y = Q / B;  // Bob work count
+            
+            // Check alternating condition
+            if(Math.abs(x - y) <= 1) {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
+        }
+        
+        sc.close();
+    }
+}
